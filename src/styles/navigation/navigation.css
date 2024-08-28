@@ -1,0 +1,69 @@
+/* Navigation Container */
+.navigation {
+	position: fixed;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	width: 256px;
+	height: 100%;
+	background-image: url("../../assets/images/dark_woods.jpg");
+	color: var(--accent-background);
+	z-index: 1008;
+	transform: translateX(0);
+}
+
+/* Navigation Wrapper */
+.navigation-wrapper {
+	width: 100%;
+	height: 100%;
+	background: var(--primary-background-transparent);
+}
+
+/* Navigation Items */
+.navigation-item {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 48px;
+	margin: 5px 15px;
+	background-color: rgba(0, 0, 0, 0.075);
+	color: white;
+	list-style: none;
+}
+
+/* Navigation Link */
+.navigation-link {
+	display: flex;
+	align-items: center;
+	justify-content: start;
+	width: 100%;
+	min-height: 48px;
+	border-radius: 5px;
+	text-decoration: none;
+}
+
+.navigation-link:hover {
+	background-color: var(--lighter-gray-background-transparent);
+}
+
+.active {
+	background-color: var(--gray-background-transparent);
+}
+
+/* Navigation Link Image */
+.navigation-link-image-wrapper {
+	display: flex;
+	align-items: center;
+	margin-left: 10px;
+}
+
+.navigation-link-image {
+	height: 20px;
+	width: 20px;
+}
+
+/* Navigation Link Text */
+.navigation-link-text {
+	font-size: 0.95rem;
+	margin-left: 25px;
+}

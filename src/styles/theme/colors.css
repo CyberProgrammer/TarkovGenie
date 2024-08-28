@@ -1,0 +1,17 @@
+/*
+	Main - #000000
+	Main Accent - #0e0e0e
+	Secondary - #9a8866
+ */
+
+:root{
+	--primary-background: #000000;
+	--secondary-background: #0e0e0e;
+	--accent-background: #9a8866;
+
+	/* Transparent backgrounds */
+	--primary-background-transparent: rgba(0, 0, 0, 0.40);
+	--accent-background-transparent: rgba(154, 136, 102, 0.34);
+	--gray-background-transparent: rgba(106, 109, 108, 0.55);
+	--lighter-gray-background-transparent: rgba(106, 109, 108, 0.3);
+}

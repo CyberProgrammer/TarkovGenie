@@ -1,14 +1,45 @@
+*{
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
 
+html{
+	font-size: 100%;
+	width: 100%;
+	min-height: 100vh;
+	background-color: darkgray;
+}
+
+svg {
+	/* Make the SVGs fit the parent container by default */
+	height: 100%;
+	width: 100%;
+
+	/* Prevent the SVG from altering cursor interaction */
+	pointer-events: none;
+}
+
+a{
+	text-decoration: none;
+	color: inherit;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html {
+		scroll-behavior: smooth;
+	}
+}
 
 @media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+	:root {
+		color: #213547;
+		background-color: #ffffff;
+	}
+	a:hover {
+		color: #747bff;
+	}
+	button {
+		background-color: #f9f9f9;
+	}
 }
