@@ -6,10 +6,30 @@
 	bottom: 0;
 	width: 256px;
 	height: 100%;
+	border-right: 1px solid var(--gray-background-transparent);
 	background-image: url("../../assets/images/dark_woods.jpg");
 	color: var(--accent-background);
 	z-index: 1008;
 	transform: translateX(0);
+}
+
+/* Navigation Header */
+.navigation-header{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	font-size: 0.85rem;
+	padding: 50px 0;
+}
+
+.navigation-header-logo{
+	width: 100px;
+	height: auto;
+}
+
+.navigation-header-title{
+	text-align: center;
 }
 
 /* Navigation Wrapper */
@@ -66,4 +86,56 @@
 .navigation-link-text {
 	font-size: 0.95rem;
 	margin-left: 25px;
+}
+
+/* User level wrapper */
+.user-level-wrapper{
+	display: flex;
+	margin: 10% 0;
+	padding: 5% 0;
+	border-top: 1px solid var(--gray-background-transparent);
+	border-bottom: 1px solid var(--gray-background-transparent);
+}
+
+.user-level-logo{
+	width: 30%;
+}
+
+.user-level-value{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 40%;
+}
+
+.user-level-value-title{
+	font-size: 1.5rem;
+}
+
+.user-level{
+	font-size: 2rem;
+}
+
+/* User level controls */
+.user-level-controls{
+	display: flex;
+	flex-direction: column;
+	align-items: start;
+	justify-content: center;
+	width: 30%;
+}
+
+.user-level-control-btn{
+	border: none;
+	background-color: transparent;
+	margin: 2px 5px;
+}
+
+.user-level-control-btn:hover{
+	cursor: pointer;
+}
+
+.user-level-control-icon{
+	width: 25px;
+	height: 25px;
 }

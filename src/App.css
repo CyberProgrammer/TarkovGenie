@@ -1,3 +1,28 @@
-#app{
+@font-face {
+	font-family: 'BebasNeue', sans-serif;
+	src: url('./assets/fonts/BebasNeue-Regular.ttf') format('truetype');
+}
 
+@font-face {
+	font-family: 'AnonymousPro-Regular', monospace;
+	src: url('./assets/fonts/AnonymousPro/AnonymousPro-Regular.ttf') format('truetype');
+}
+
+@font-face {
+	font-family: 'AnonymousPro-Bold', monospace;
+	src: url('./assets/fonts/AnonymousPro/AnonymousPro-Bold.ttf') format('truetype');
+}
+
+html{
+	font-family: "AnonymousPro-Regular", monospace;
+	font-weight: 400;
+}
+
+h1{
+	font-family: "AnonymousPro-Regular", monospace;
+	font-weight: 600;
+}
+
+#app{
+	background-color: black;
 }

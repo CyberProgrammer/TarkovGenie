@@ -1,0 +1,16 @@
+.view-wrapper{
+	position: fixed;
+	height: 100%;
+	width: calc(100% - 256px);
+	left: 256px;
+}
+
+.view{
+	height: 100%;
+	color: var(--accent-background);
+	background-color: var(--content-background);
+}
+
+.view-content{
+	padding: 20px;
+}

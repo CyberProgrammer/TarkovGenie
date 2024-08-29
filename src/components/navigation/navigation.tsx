@@ -1,11 +1,17 @@
 import '@styles/navigation/navigation.css'
-import '@styles/theme/colors.css'
+
 import DashboardIcon from '@icons/dashboard.svg'
 import TasksIcon from '@icons/tasks.svg'
 import ItemsIcon from '@icons/items_needed.svg'
 import HideoutIcon from '@icons/hideout.svg'
 import SettingsIcon from '@icons/settings.svg'
-import {useEffect, useState} from "react";
+import UpIcon from '@icons/up.svg'
+import DownIcon from '@icons/down.svg'
+import Logo from '@logos/logo.svg'
+
+import { Link } from 'react-router-dom';
+
+import {useState} from "react";
 
 enum SelectedNav{
     Dashboard = 1,
@@ -17,96 +23,118 @@ enum SelectedNav{
 const Navigation = () => {
     const [selected, setSelected] = useState(SelectedNav.Dashboard);
 
+    const [level, setLevel] = useState(1);
+
     return(
         <>
             <nav className={'navigation'}>
                 <div className={'navigation-wrapper'}>
-                    <div>
+                    <div className={'navigation-header'}>
+                        <img className={'navigation-header-logo'} src={Logo} alt={'Logo'}/>
+                        <h1 className={'navigation-header-title'}>Tarkov Genie</h1>
+                    </div>
+                    <div className="user-profile-wrapper">
+
+                    </div>
+                    <div className="user-level-wrapper">
+                        <div className={'user-level-logo'}>
+
+                        </div>
                         {
-                            /* Logo here */
+                            /* Level logo here*/
                         }
-                        <h1>Tarkov Genie</h1>
-                    </div>
-                    <div className="user_profile">
-
-                    </div>
-                    <div className="user_level">
-
+                        <div className={'user-level-value'}>
+                            <p className={'user-level-value-title'}>Level</p>
+                            <h2 className={'user-level'}>{level}</h2>
+                        </div>
+                        <div className={'user-level-controls'}>
+                            <button className={'user-level-control-btn'} onClick={() => setLevel((prev) => prev + 1)}>
+                                <img className={'user-level-control-icon'} src={UpIcon} alt={'icon'}/>
+                            </button>
+                            <button className={'user-level-control-btn'} onClick={() => setLevel((prev) => prev - 1)}>
+                                <img className={'user-level-control-icon'} src={DownIcon} alt={'icon'}/>
+                            </button>
+                        </div>
                     </div>
                     <div className="navigation-links">
                         <ul>
-                            <li className={'navigation-item'}>
-                                <a
+                            <li className='navigation-item'>
+                                <Link
+                                    to="/"
                                     className={`navigation-link ${selected === SelectedNav.Dashboard ? "active" : ""}`}
-                                    href="#dashboard"
                                     onClick={() => setSelected(SelectedNav.Dashboard)}
                                 >
-                                    <div className={'navigation-link-image-wrapper'}>
-                                        <img className={'navigation-link-image'} src={DashboardIcon} alt={"icon"}/>
+                                    <div className='navigation-link-image-wrapper'>
+                                        <img className='navigation-link-image' src={DashboardIcon}
+                                             alt="Dashboard icon"/>
                                     </div>
-                                    <div className={'navigation-link-text'}>
+                                    <div className='navigation-link-text'>
                                         Dashboard
                                     </div>
-                                </a>
+                                </Link>
                             </li>
-                            <li className={'navigation-item'}>
-                                <a className={`navigation-link ${selected === SelectedNav.Tasks ? "active" : ""}`}
-                                   href="#TasksIcon"
-                                   onClick={() => setSelected(SelectedNav.Tasks)}
+                            <li className='navigation-item'>
+                                <Link
+                                    to="/tasks"
+                                    className={`navigation-link ${selected === SelectedNav.Tasks ? "active" : ""}`}
+                                    onClick={() => setSelected(SelectedNav.Tasks)}
                                 >
-                                    <div className={'navigation-link-image-wrapper'}>
-                                        <img className={'navigation-link-image'} src={TasksIcon} alt={"icon"}/>
+                                    <div className='navigation-link-image-wrapper'>
+                                        <img className='navigation-link-image' src={TasksIcon} alt="Tasks icon"/>
                                     </div>
-                                    <div className={'navigation-link-text'}>
+                                    <div className='navigation-link-text'>
                                         Tasks
                                     </div>
-                                </a>
+                                </Link>
                             </li>
-                            <li className={'navigation-item'}>
-                                <a className={`navigation-link ${selected === SelectedNav.NeededItems ? "active" : ""}`}
-                                   href="#ItemsIcon"
-                                   onClick={() => setSelected(SelectedNav.NeededItems)}
+                            <li className='navigation-item'>
+                                <Link
+                                    to="/needed-items"
+                                    className={`navigation-link ${selected === SelectedNav.NeededItems ? "active" : ""}`}
+                                    onClick={() => setSelected(SelectedNav.NeededItems)}
                                 >
-                                    <div className={'navigation-link-image-wrapper'}>
-                                        <img className={'navigation-link-image'} src={ItemsIcon} alt={"icon"}/>
+                                    <div className='navigation-link-image-wrapper'>
+                                        <img className='navigation-link-image' src={ItemsIcon} alt="Needed Items icon"/>
                                     </div>
-                                    <div className={'navigation-link-text'}>
+                                    <div className='navigation-link-text'>
                                         Needed Items
                                     </div>
-                                </a>
+                                </Link>
                             </li>
-                            <li className={'navigation-item'}>
-                                <a className={`navigation-link ${selected === SelectedNav.Hideout ? "active" : ""}`}
-                                   href="#HideoutIcon"
-                                   onClick={() => setSelected(SelectedNav.Hideout)}
+                            <li className='navigation-item'>
+                                <Link
+                                    to="/hideout"
+                                    className={`navigation-link ${selected === SelectedNav.Hideout ? "active" : ""}`}
+                                    onClick={() => setSelected(SelectedNav.Hideout)}
                                 >
-                                    <div className={'navigation-link-image-wrapper'}>
-                                        <img className={'navigation-link-image'} src={HideoutIcon} alt={"icon"}/>
+                                    <div className='navigation-link-image-wrapper'>
+                                        <img className='navigation-link-image' src={HideoutIcon} alt="Hideout icon"/>
                                     </div>
-                                    <div className={'navigation-link-text'}>
+                                    <div className='navigation-link-text'>
                                         Hideout
                                     </div>
-                                </a>
+                                </Link>
                             </li>
-                            <li className={'navigation-item'}>
-                                <a className={`navigation-link ${selected === SelectedNav.Settings ? "active" : ""}`}
-                                   href="#SettingsIcon"
-                                   onClick={() => setSelected(SelectedNav.Settings)}
+                            <li className='navigation-item'>
+                                <Link
+                                    to="/settings"
+                                    className={`navigation-link ${selected === SelectedNav.Settings ? "active" : ""}`}
+                                    onClick={() => setSelected(SelectedNav.Settings)}
                                 >
-                                    <div className={'navigation-link-image-wrapper'}>
-                                        <img className={'navigation-link-image'} src={SettingsIcon} alt={"icon"}/>
+                                    <div className='navigation-link-image-wrapper'>
+                                        <img className='navigation-link-image' src={SettingsIcon} alt="Settings icon"/>
                                     </div>
-                                    <div className={'navigation-link-text'}>
+                                    <div className='navigation-link-text'>
                                         Settings
                                     </div>
-                                </a>
+                                </Link>
                             </li>
                         </ul>
                     </div>
                 </div>
             </nav>
         </>
-    )
+)
 }
 
 export default Navigation;
