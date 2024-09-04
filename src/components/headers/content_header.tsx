@@ -3,8 +3,13 @@ import '@styles/header/header.css';
 import { useLocation } from 'react-router-dom';
 
 import MenuIcon from '@icons/menu.svg';
+import { useDispatch, useSelector } from 'react-redux';
+import { toggleNav } from 'actions/userActions';
 
+import { UserState } from '../../types/types';
 const ContentHeader = () => {
+    const dispatch = useDispatch();
+
     const location = useLocation();
     let currentPath;
 
@@ -29,8 +34,8 @@ const ContentHeader = () => {
     }
     return(
         <>
-            <div className={'view-header'}>
-                <button className={'view-header-button'}>
+            <div className={`view-header`}>
+                <button className={'view-header-button'} onClick={() => {dispatch(toggleNav())}}>
                     <img className={'view-header-icon'} src={MenuIcon} alt={'icon'}/>
                 </button>
                 <h2 className={'view-header-text'}>{currentPath}</h2>

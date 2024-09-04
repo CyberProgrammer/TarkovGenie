@@ -1,0 +1,39 @@
+@media screen and (max-width: 1200px) {
+	.dashboard-cards-wrapper{
+		flex-direction: column;
+	}
+
+	.dashboard-introduction-image{
+		display: none;
+	}
+}
+
+.dashboard-cards-wrapper{
+	display: flex;
+	justify-content: center;
+	margin-top: 3%;
+}
+
+.dashboard-introduction{
+	display: flex;
+	align-items: end;
+	margin-top: 0;
+}
+
+.dashboard-introduction-image{
+	height: 250px;
+	margin-right: 2%;
+}
+
+.dashboard-introduction-wrapper{
+	width: 100%;
+	color: white;
+	background-color: #1b5e20;
+	border-radius: 5px;
+	padding: 15px;
+	margin-bottom: 10px;
+}
+
+.dashboard-introduction-message a{
+	color: #818cff;
+}

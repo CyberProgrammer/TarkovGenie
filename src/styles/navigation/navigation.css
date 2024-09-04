@@ -1,3 +1,43 @@
+@media screen and (max-width: 650px){
+	html .mobile-nav{
+		animation: 0.5s slideOut ease-in;
+		animation-fill-mode: forwards;
+	}
+
+	html .mobile-nav-extended{
+		animation: 0.5s slideIn ease-in;
+		animation-fill-mode: forwards;
+	}
+}
+
+@keyframes slideOut {
+	from {
+		left: 0;
+	}
+	to {
+		left: -256px;
+	}
+}
+
+@keyframes slideIn {
+	from {
+		left: -256px;
+	}
+	to {
+		left: 0;
+	}
+}
+
+.nav-visible{
+	animation: 0.5s slideIn ease-in;
+	animation-fill-mode: forwards;
+}
+
+.nav-hidden{
+	animation: 0.5s slideOut ease-in;
+	animation-fill-mode: forwards;
+}
+
 /* Navigation Container */
 .navigation {
 	position: fixed;

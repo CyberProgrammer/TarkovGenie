@@ -1,6 +1,9 @@
 .view-header{
 	display: flex;
 	align-items: center;
+	position: sticky;
+	top: 0;
+	max-height: 70px;
 	padding: 20px 0;
 	background-color: var(--lighter-gray-background-transparent);
 }
@@ -14,12 +17,13 @@
 	height: 40px;
 	border: none;
 	margin-left: 20px;
+	padding: 25px;
 }
 
 .view-header-button:hover{
 	cursor: pointer;
 	border-radius: 50px;
-	background-color: var(--content-background);
+	background-color: var(--content-background-transparent);
 }
 
 .view-header-icon{

@@ -1,16 +1,46 @@
+@media screen and (max-width: 650px){
+	#app .view-wrapper{
+		width: 100%;
+		left: 0;
+	}
+}
+
+@keyframes growWrapper {
+	from{
+		width: calc(100% - 256px);
+		left: 256px;
+	}
+	to{
+		width: 100%;
+		left: 0;
+	}
+}
+
+.view-wrapper-full{
+	animation: 0.5s growWrapper ease-in;
+	animation-fill-mode: forwards;
+}
+
 .view-wrapper{
 	position: fixed;
 	height: 100%;
 	width: calc(100% - 256px);
 	left: 256px;
+	background-color: var(--content-background);
 }
 
 .view{
 	height: 100%;
-	color: var(--accent-background);
+	overflow-y: scroll;
+	scrollbar-width: none;
+	color: white;
 	background-color: var(--content-background);
 }
 
 .view-content{
-	padding: 20px;
+	display: flex;
+	flex-direction: column;
+	max-width: 1920px;
+	padding: 20px 40px 40px 40px;
+	margin: auto;
 }

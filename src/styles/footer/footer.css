@@ -1,0 +1,42 @@
+@media screen and (max-width: 1200px) {
+	.footer-container .footer-wrapper{
+		width: 80%;
+	}
+}
+
+@media screen and (max-width: 650px){
+	#app .footer-container{
+		width: 100%;
+	}
+}
+
+.footer-container-full{
+	width: 100% !important;
+}
+
+.footer-container{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100px;
+	width: calc(100% - 256px);
+	position: fixed;
+	bottom: 0;
+	background-color: var(--footer-background);
+}
+
+.footer-wrapper{
+	height: 50%;
+	width: 100%;
+	margin: auto;
+	text-align: center;
+}
+
+.footer-copyright{
+	margin-bottom: 5px;
+}
+
+.footer-wrapper p{
+	font-size: 0.8rem;
+}
+

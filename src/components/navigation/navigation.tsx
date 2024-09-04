@@ -11,7 +11,7 @@ import Logo from '@logos/logo.svg'
 
 import { Link } from 'react-router-dom';
 
-import {useState} from "react";
+import {useEffect, useRef, useState } from "react";
 
 enum SelectedNav{
     Dashboard = 1,
@@ -20,14 +20,47 @@ enum SelectedNav{
     Hideout,
     Settings
 }
+
+import { UserState } from '../../types/types'
+import { useSelector, useDispatch } from "react-redux";
+import { closeNav } from 'actions/userActions'
+import useWindowWidth from '@hooks/useWindowWidth'
+
 const Navigation = () => {
     const [selected, setSelected] = useState(SelectedNav.Dashboard);
-
     const [level, setLevel] = useState(1);
+
+    let state = useSelector((state: UserState)=> state);
+    let navigationVisibility = state.navVisible;
+    const dispatch = useDispatch();
+
+    const navRef = useRef<HTMLDivElement>(null);
+    const width = useWindowWidth();
+    const widthRef = useRef(width);
+    console.log('Current width:', width);
+
+    useEffect(() => {
+        widthRef.current = width; // Update the ref value whenever width changes
+    }, [width]);
+
+    const handleClickOutside = (event: MouseEvent) => {
+        if (widthRef.current <= 650 && navRef.current && !navRef.current.contains(event.target as Node)) {
+            dispatch(closeNav());
+            console.log('Close nav');
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     return(
         <>
-            <nav className={'navigation'}>
+            <nav ref={navRef} className={`navigation ${!navigationVisibility ? 'nav-hidden' : ''}`}>
                 <div className={'navigation-wrapper'}>
                     <div className={'navigation-header'}>
                         <img className={'navigation-header-logo'} src={Logo} alt={'Logo'}/>
