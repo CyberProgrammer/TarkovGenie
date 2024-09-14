@@ -1,0 +1,37 @@
+.trader-scroll-container{
+	display: flex;
+	width: 100%;
+}
+
+/* Trader filter button */
+.trader-filter-btn{
+	display: flex;
+	align-items: center;
+	justify-content: space-evenly;
+	width: auto;
+	height: 60px;
+	color: white;
+	padding: 10px 20px;
+	background-color: transparent;
+	border: none;
+}
+
+.trader-filter-icon{
+	width: 35px;
+	height: 35px;
+	border-radius: 50%;
+}
+
+.trader-list{
+	display: flex;
+	overflow-x: hidden;
+}
+
+.scroll-btn {
+	margin: 0 10px;
+	padding: 10px;
+	cursor: pointer;
+	color: white;
+	background-color: transparent;
+	border: none;
+}

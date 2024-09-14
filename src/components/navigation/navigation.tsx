@@ -21,28 +21,38 @@ enum SelectedNav{
     Settings
 }
 
-import { UserState } from '../../types/types'
 import { useSelector, useDispatch } from "react-redux";
-import { closeNav } from 'actions/userActions'
+import { closeNav, decreaseLevel, increaseLevel } from 'actions/userActions'
 import useWindowWidth from '@hooks/useWindowWidth'
+import { RootState } from '@reducers/rootReducer'
 
 const Navigation = () => {
-    const [selected, setSelected] = useState(SelectedNav.Dashboard);
-    const [level, setLevel] = useState(1);
+    const navState = useSelector((state: RootState)=> state.nav);
+    const userState = useSelector((state: RootState)=> state.user);
 
-    let state = useSelector((state: UserState)=> state);
-    let navigationVisibility = state.navVisible;
+    console.log('Nav:', navState.navVisible);
     const dispatch = useDispatch();
 
+    // Determines what route is in view
+    const [selected, setSelected] = useState(SelectedNav.Dashboard);
+
+    // State of user level
+    const level = userState.userLevel;
+
+    // State of navigation menu visibility
+    const navigationVisibility = navState.navVisible;
+
     const navRef = useRef<HTMLDivElement>(null);
+
+    // Keeps track of window width
     const width = useWindowWidth();
     const widthRef = useRef(width);
-    console.log('Current width:', width);
-
     useEffect(() => {
-        widthRef.current = width; // Update the ref value whenever width changes
+        if(widthRef.current >= 650 && width < 650 && navigationVisibility){
+            dispatch(closeNav());
+        }
+        widthRef.current = width;
     }, [width]);
-
     const handleClickOutside = (event: MouseEvent) => {
         if (widthRef.current <= 650 && navRef.current && !navRef.current.contains(event.target as Node)) {
             dispatch(closeNav());
@@ -81,10 +91,10 @@ const Navigation = () => {
                             <h2 className={'user-level'}>{level}</h2>
                         </div>
                         <div className={'user-level-controls'}>
-                            <button className={'user-level-control-btn'} onClick={() => setLevel((prev) => prev + 1)}>
+                            <button className={'user-level-control-btn'} onClick={() => {dispatch(increaseLevel())}}>
                                 <img className={'user-level-control-icon'} src={UpIcon} alt={'icon'}/>
                             </button>
-                            <button className={'user-level-control-btn'} onClick={() => setLevel((prev) => prev - 1)}>
+                            <button className={'user-level-control-btn'} onClick={() => {dispatch(decreaseLevel())}}>
                                 <img className={'user-level-control-icon'} src={DownIcon} alt={'icon'}/>
                             </button>
                         </div>

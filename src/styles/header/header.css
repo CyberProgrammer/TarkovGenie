@@ -1,3 +1,9 @@
+@media screen and (max-width: 650px){
+	#app .view-header{
+		background-color: var(--secondary-background);
+		border-bottom: 1px solid var(--gray-background-transparent);
+	}
+}
 .view-header{
 	display: flex;
 	align-items: center;
@@ -5,7 +11,8 @@
 	top: 0;
 	max-height: 70px;
 	padding: 20px 0;
-	background-color: var(--lighter-gray-background-transparent);
+	background-color: var(--secondary-background);
+	border-bottom: 1px solid var(--gray-background-transparent);
 }
 
 .view-header-button{

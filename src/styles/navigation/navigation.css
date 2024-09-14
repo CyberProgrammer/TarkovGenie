@@ -47,7 +47,9 @@
 	width: 256px;
 	height: 100%;
 	border-right: 1px solid var(--gray-background-transparent);
-	background-image: url("../../assets/images/dark_woods.jpg");
+	background-image: url("../../assets/images/dark_woods_blur.jpg");
+	background-size: cover;
+	background-repeat: no-repeat;
 	color: var(--accent-background);
 	z-index: 1008;
 	transform: translateX(0);

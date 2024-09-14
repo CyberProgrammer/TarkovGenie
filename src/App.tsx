@@ -8,17 +8,17 @@ import Dashboard from '@views/dashboard/dashboard';
 import ContentHeader from '@components/headers/content_header';
 
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
-import Tasks from '@views/tasks/tasks';
 
-import {UserState} from '../src/types/types.ts';
+import { RootState } from '@reducers/rootReducer';
 import {useSelector} from 'react-redux';
 
 import useWindowWidth from './hooks/useWindowWidth';
 import {useEffect, useRef } from 'react';
+import TasksView from '@views/tasks/TasksView';
 
 function App() {
-    let state = useSelector((state: UserState) => state);
-    let navVisible = state.navVisible;
+    const navState = useSelector((state: RootState) => state.nav);
+    const navVisible = navState.navVisible;
 
     const width = useWindowWidth();
     const widthRef = useRef(width);
@@ -27,6 +27,7 @@ function App() {
         widthRef.current = width;
     }, [width]);
 
+    // Apply full width to wrapper when the nav
     const shouldApplyFullWidth = navVisible && width >= 650;
 
     return (
@@ -38,7 +39,7 @@ function App() {
                         <ContentHeader/>
                         <Routes>
                             <Route path="/" element={<Dashboard/>}/>
-                            <Route path="/tasks" element={<Tasks/>}/>
+                            <Route path="/tasks" element={<TasksView/>}/>
                         </Routes>
                         <Footer/>
                     </div>

@@ -1,13 +1,11 @@
-import useWindowWidth from '@hooks/useWindowWidth';
+import { RootState } from '@reducers/rootReducer';
 import '@styles/footer/footer.css';
 
 import { useSelector } from 'react-redux';
 
 const Footer = () => {
-    const state = useSelector((state) => state);
-    const navVisible = state.navVisible;
-
-    const width = useWindowWidth();
+    const navState = useSelector((state:  RootState) => state.nav);
+    const navVisible = navState.navVisible;
 
     return(
         <>

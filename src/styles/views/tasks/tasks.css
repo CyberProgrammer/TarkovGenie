@@ -1,0 +1,62 @@
+.task-view-header{
+	width: 100%;
+	background-color: gainsboro;
+	margin-bottom: 5px;
+}
+
+.task-view-header-row{
+	display: flex;
+	justify-content: space-between;
+	width: 100%;
+	background-color: var(--content-background);
+}
+
+.task-view-col{
+	display: flex;
+	justify-content: center;
+	height: 60px;
+	min-width: 25%;
+	overflow-x: auto;
+	overflow-y: hidden;
+	scrollbar-width: thin;
+	padding: 0 10px;
+	background-color: var(--satin-soft-blue-color);
+	border-radius: 10px;
+}
+
+.task-view-trader-list{
+	display: flex;
+	justify-content: center;
+	width: 70%;
+	padding: 0 10px;
+	background-color: var(--satin-soft-blue-color);
+	border-radius: 10px;
+}
+
+.selected-btn{
+	border-bottom: 2px solid white !important;
+}
+
+.control-filter-btn{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100px;
+	height: 59px;
+	color: white;
+	text-align: center;
+	margin: 0 10px;
+	background-color: transparent;
+	border: none;
+}
+
+/* Trader filter */
+.trader-filter-btn-full{
+	width: 200px;
+	height: 60px;
+	color: white;
+	margin: 0 10px;
+	background-color: transparent;
+	border: none;
+}
+

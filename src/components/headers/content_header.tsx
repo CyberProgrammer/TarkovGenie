@@ -3,10 +3,9 @@ import '@styles/header/header.css';
 import { useLocation } from 'react-router-dom';
 
 import MenuIcon from '@icons/menu.svg';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { toggleNav } from 'actions/userActions';
 
-import { UserState } from '../../types/types';
 const ContentHeader = () => {
     const dispatch = useDispatch();
 

@@ -1,25 +1,26 @@
-import { TOGGLE_NAV, CLOSE_NAV } from '../actionTypes/actionTypes.js'
-import { UserState, UserAction } from '../types/types';
+import { INCREASE_LEVEL, DECREASE_LEVEL } from '../actionTypes/actionTypes.js';
+import { ReducerActionString, UserState } from '../types/types';
 
-const initialState = {
-    navVisible: true,
-}
+const initialUserState : UserState = {
+    userLevel: 1,
+    username: "Test"
+};
 
-const userReducer = (state = initialState, action: UserAction): UserState => {
+const userReducer = (state = initialUserState, action: ReducerActionString) => {
     switch (action.type) {
-        case TOGGLE_NAV:
+        case INCREASE_LEVEL:
             return {
                 ...state,
-                navVisible: !state.navVisible,
+                userLevel: state.userLevel < 79 ? state.userLevel + 1 : state.userLevel,
             };
-        case CLOSE_NAV:
+        case DECREASE_LEVEL:
             return {
                 ...state,
-                navVisible: false,
-            }
+                userLevel: state.userLevel > 1 ? state.userLevel - 1 : state.userLevel,
+            };
         default:
             return state;
     }
-}
+};
 
 export default userReducer;
