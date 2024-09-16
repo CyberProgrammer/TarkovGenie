@@ -8,10 +8,12 @@ export interface UserState{
 }
 
 export interface TaskState{
-    tasksCompletedCount: number,
-    totalTasksCount: number;
-    taskItemsFoundCount: number;
-    totalTaskItemsCount: number;
+    tasksCompleted: number,
+    taskItemsFound: number;
+    totalTasks: number;
+    totalTaskItems: number;
+    traderFilter: number;
+    filterByTrader: boolean;
 }
 
 export interface HideoutState{
@@ -33,3 +35,8 @@ export interface ReducerActionBoolean{
     type:string;
     payload?:boolean;
 }
+
+export type ReducerActions =
+    | ReducerActionNumber
+    | ReducerActionString
+    | ReducerActionBoolean;

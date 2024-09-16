@@ -3,9 +3,9 @@ import {
     INCREASE_TASK_ITEMS_FOUND, DECREASE_TASK_ITEMS_FOUND, CHANGE_TRADER_FILTER, CHANGE_FILTER_BY
 } from '../actionTypes/actionTypes.js';
 
-import {ReducerActionBoolean, ReducerActionNumber, ReducerActionString} from 'types/types';
+import {ReducerActions, TaskState} from 'types/types';
 
-const initialTasksState = {
+const initialTasksState : TaskState = {
     tasksCompleted: 43,
     taskItemsFound: 54,
     totalTasks: 145,
@@ -14,7 +14,7 @@ const initialTasksState = {
     filterByTrader: false
 };
 
-const tasksReducer = (state = initialTasksState, action: ReducerActionString | ReducerActionBoolean | ReducerActionNumber) => {
+const tasksReducer = (state = initialTasksState, action: ReducerActions) => {
     switch (action.type) {
         case INCREASE_TASKS_COMPLETED:
             return {
