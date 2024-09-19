@@ -1,3 +1,14 @@
+@media screen and (max-width: 1250px){
+	#app .task-view-header-row{
+		flex-direction: column;
+	}
+
+	#app .task-view-trader-list{
+		width: 100%;
+		margin: 10px 0 0 0;       
+	}
+}
+
 .task-view-header{
 	width: 100%;
 	background-color: gainsboro;
@@ -9,6 +20,25 @@
 	justify-content: space-between;
 	width: 100%;
 	background-color: var(--content-background);
+}
+
+.task-view-status-row{
+	display: flex;
+	width: 100%;
+	background-color: var(--content-background);
+}
+
+.task-status-col{
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	overflow-x: auto;
+	overflow-y: hidden;
+	scrollbar-width: thin;
+	padding: 0 10px;
+	margin: 10px 0;
+	background-color: var(--satin-soft-blue-color);
+	border-radius: 10px;
 }
 
 .task-view-col{

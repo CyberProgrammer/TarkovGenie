@@ -7,12 +7,28 @@ export interface UserState{
     username: string;
 }
 
-export interface TaskState{
-    tasksCompleted: number,
+import {Task} from 'types/quest';
+
+export enum TaskStatusFilter{
+    Active = 0,
+    Completed,
+    Locked
+}
+
+export interface TaskDataState{
+    completed: Task[];
+    locked: Task[];
+    active: Task[];
+}
+
+export interface UserTasksState{
+    userTaskData: TaskDataState;
+    tasksCompleted: number;
     taskItemsFound: number;
     totalTasks: number;
     totalTaskItems: number;
     traderFilter: number;
+    statusFilter: TaskStatusFilter;
     filterByTrader: boolean;
 }
 
@@ -23,7 +39,7 @@ export interface HideoutState{
 
 export interface ReducerActionNumber{
     type: string;
-    payload?: number
+    payload?: number;
 }
 
 export interface ReducerActionString{

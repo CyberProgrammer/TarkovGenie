@@ -1,40 +1,47 @@
-import TaskCard from "@components/cards/task_card";
-import TaskList from '../../../data/tasks.json';
-import TraderList from '../../../data/traders.json';
-
 import '@styles/views/tasks/tasks.css';
 
+import TaskCard from "@components/cards/task_card";
 import TradersList from "@components/list/trader_list.tsx";
+
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "@reducers/rootReducer.ts";
-import {toggleFilterBy} from "../../actions/userActions.ts";
-import {useEffect, useState} from "react";
+import {changeStatusFilter} from "../../actions/userActions.ts";
+import {useEffect, useMemo} from "react";
+import {TaskStatusFilter} from "@customTypes/types.ts";
+import {getFilteredTasks} from "@helpers/getFilteredTasksByTrader.ts";
+import {getUnFilteredTasks} from "@helpers/getUnfilteredTaskList.ts";
+import StatusFilterButton from "@components/buttons/status_filter_button.tsx";
+import TraderFilterButton from "@components/buttons/trader_filter_button.tsx";
+
 const TasksView = () => {
     const dispatch = useDispatch();
 
-    // State to manage the filtered tasks list
-    const [filteredTasksList, setFilteredTasksList] = useState(TaskList.data.tasks);
+    // Selected task group
+    const taskStatusFilter = useSelector((state: RootState) => state.tasks.statusFilter) ?? TaskStatusFilter.Active;
 
-    let tasksList = TaskList.data.tasks;
-    const traderList = TraderList.data.traders;
+    // Keeps track of unfiltered task lists
+    const completedTasks = useSelector((state: RootState) => state.tasks.userTaskData.completed);
+    const lockedTasks = useSelector((state: RootState) => state.tasks.userTaskData.locked);
+    const activeTasks = useSelector((state: RootState) => state.tasks.userTaskData.active);
 
+    // Redux state for filtering by trader
     const filterByTrader = useSelector((state: RootState) => state.tasks.filterByTrader);
     const traderID = useSelector((state: RootState) => state.tasks.traderFilter);
 
-    useEffect(() => {
-        if (filterByTrader && typeof traderID === "number") {
-            const trader = TraderList.data.traders[traderID];
-
-            if (trader) {
-                // Filter tasks by trader ID
-                const filtered = TaskList.data.tasks.filter((t) => t.trader.id === trader.id);
-                setFilteredTasksList(filtered); // Update state to trigger a re-render
-            }
+    // Memoized calculation of filtered tasks
+    const filteredTasksList = useMemo(() => {
+        if (taskStatusFilter && filterByTrader && typeof traderID === "number") {
+            return getFilteredTasks(taskStatusFilter, completedTasks, lockedTasks, activeTasks, traderID);
         } else {
-            // Show all tasks if not filtering by trader
-            setFilteredTasksList(TaskList.data.tasks);
+            return getUnFilteredTasks(taskStatusFilter, completedTasks, lockedTasks, activeTasks);
         }
-    }, [filterByTrader, traderID]);
+    }, [taskStatusFilter, filterByTrader, traderID, completedTasks, lockedTasks, activeTasks]);
+
+    // Re-render filtered task list on filter or trader change
+    useEffect(() => {
+        if(taskStatusFilter)
+            dispatch(changeStatusFilter(taskStatusFilter));
+    }, [taskStatusFilter]);
 
     return(
         <>
@@ -42,18 +49,8 @@ const TasksView = () => {
                 <div className={'task-view-header'}>
                     <div className={'task-view-header-row'}>
                         <div className={'task-view-col'}>
-                            <button
-                                className={`control-filter-btn ${!filterByTrader ? 'selected-btn' : ''}`}
-                                onClick={() => dispatch(toggleFilterBy(false))}
-                            >
-                                All
-                            </button>
-                            <button
-                                className={`control-filter-btn ${filterByTrader ? 'selected-btn' : ''}`}
-                                onClick={() => dispatch(toggleFilterBy(true))}
-                            >
-                                Traders
-                            </button>
+                            <TraderFilterButton buttonText={'All'} isFilter={false} />
+                            <TraderFilterButton buttonText={'Traders'} isFilter={true} />
                         </div>
                         <div className={'task-view-trader-list'}>
                             {!filterByTrader ?
@@ -66,10 +63,17 @@ const TasksView = () => {
                             }
                         </div>
                     </div>
+                    <div className={'task-view-status-row'}>
+                        <div className={'task-status-col'}>
+                            <StatusFilterButton buttonText={'Active'} selectedValue={TaskStatusFilter.Active} />
+                            <StatusFilterButton buttonText={'Locked'} selectedValue={TaskStatusFilter.Locked} />
+                            <StatusFilterButton buttonText={'Completed'} selectedValue={TaskStatusFilter.Completed} />
+                        </div>
+                    </div>
                 </div>
 
                 {filteredTasksList.map((task) => (
-                    <TaskCard key={task.id} task={task} />
+                    <TaskCard key={task.id} task={task}/>
                 ))}
             </div>
         </>
