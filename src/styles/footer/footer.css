@@ -23,14 +23,23 @@
 	width: 100% !important;
 }
 
+.footer-container-fixed{
+	position: fixed;
+	bottom: 0;
+	width: calc(100% - 256px);
+}
+
+.footer-container-relative{
+	position: relative;
+	width: 100%;
+}
+
 .footer-container{
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	position: relative;
 	height: 100px;
-	width: 100%;
-	bottom: 0;
+
 	background-color: var(--footer-background);
 }
 

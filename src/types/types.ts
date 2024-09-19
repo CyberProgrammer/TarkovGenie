@@ -1,3 +1,6 @@
+import {ADD_COMPLETED_TASK} from "../actionTypes/actionTypes.ts";
+import {Task} from 'types/quest';
+
 export interface NavState{
     navVisible: boolean;
 }
@@ -7,7 +10,7 @@ export interface UserState{
     username: string;
 }
 
-import {Task} from 'types/quest';
+
 
 export enum TaskStatusFilter{
     Active = 0,
@@ -52,7 +55,13 @@ export interface ReducerActionBoolean{
     payload?:boolean;
 }
 
+export interface AddCompletedTaskAction {
+    type: typeof ADD_COMPLETED_TASK;
+    payload?: Task;
+}
+
 export type ReducerActions =
     | ReducerActionNumber
     | ReducerActionString
-    | ReducerActionBoolean;
+    | ReducerActionBoolean
+    | AddCompletedTaskAction;

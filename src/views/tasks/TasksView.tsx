@@ -41,7 +41,7 @@ const TasksView = () => {
     useEffect(() => {
         if(taskStatusFilter)
             dispatch(changeStatusFilter(taskStatusFilter));
-    }, [taskStatusFilter]);
+    }, [dispatch, taskStatusFilter]);
 
     return(
         <>
@@ -71,10 +71,11 @@ const TasksView = () => {
                         </div>
                     </div>
                 </div>
-
-                {filteredTasksList.map((task) => (
-                    <TaskCard key={task.id} task={task}/>
-                ))}
+                <div id={'card-container'} className={'task-view-card-container'}>
+                    {filteredTasksList.map((task, index) => (
+                        <TaskCard key={index} task={task}/>
+                    ))}
+                </div>
             </div>
         </>
     )

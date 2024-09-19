@@ -1,4 +1,5 @@
 import {
+    ADD_COMPLETED_TASK,
     CHANGE_FILTER_BY, CHANGE_STATUS_FILTER,
     CHANGE_TRADER_FILTER,
     DECREASE_TASK_ITEMS_FOUND,
@@ -10,17 +11,19 @@ import {
 import {ReducerActions, TaskDataState, TaskStatusFilter, UserTasksState} from 'types/types';
 
 import TaskList from '../../data/tasks.json';
+import {Task} from "@customTypes/quest.ts";
 
 const userLevel = 1;
 
 // Just to test the different status filters
-const currentActive = TaskList.data.tasks.filter((t) => t.minPlayerLevel <= userLevel);
-const currentLocked = TaskList.data.tasks.filter((t) => t.minPlayerLevel > userLevel);
+const currentActive : Task[] = TaskList.data.tasks.filter((t) => t.minPlayerLevel <= userLevel);
+const currentLocked : Task[] = TaskList.data.tasks.filter((t) => t.minPlayerLevel > userLevel);
+const currentCompleted : Task[] = [];
 
 const userTaskData : TaskDataState = {
-    completed: TaskList.data.tasks,
-    locked: currentLocked,
     active: currentActive,
+    locked: currentLocked,
+    completed: currentCompleted,
 }
 
 const initialTasksState : UserTasksState = {
@@ -71,6 +74,19 @@ const tasksReducer = (state = initialTasksState, action: ReducerActions) => {
                 ...state,
                 statusFilter: action.payload as TaskStatusFilter,
             }
+        case ADD_COMPLETED_TASK:
+            // Check that the payload is a task
+            if (action.payload && typeof action.payload === 'object' && 'id' in action.payload) {
+                return {
+                    ...state,
+                    userTaskData: {
+                        ...state.userTaskData,
+                        completed: [...state.userTaskData.completed, action.payload],
+                        active: state.userTaskData.active.filter((task) => task !== action.payload),
+                    }
+                }
+            }
+            return state;
         default:
             return state;
     }
