@@ -11,10 +11,9 @@ import
     INCREASE_HIDEOUT_ITEMS_FOUND,
     DECREASE_HIDEOUT_ITEMS_FOUND,
     CHANGE_TRADER_FILTER,
-    CHANGE_FILTER_BY, CHANGE_STATUS_FILTER, ADD_COMPLETED_TASK,
+    CHANGE_FILTER_BY, CHANGE_STATUS_FILTER
 } from '../actionTypes/actionTypes';
 import {TaskStatusFilter} from "@customTypes/types.ts";
-import {Task} from "@customTypes/quest.ts";
 
 // Action is used to send to the reducer
 
@@ -105,14 +104,6 @@ const decreaseHideoutItemsFound = () => {
     }
 }
 
-// Completed Tasks
-const handleCompletedTask = (task : Task) => {
-    return {
-        type: ADD_COMPLETED_TASK,
-        payload: task,
-    }
-}
-
 export
 {
     toggleNav,
@@ -128,5 +119,4 @@ export
     changeTraderFilter,
     changeStatusFilter,
     toggleFilterBy,
-    handleCompletedTask
 };

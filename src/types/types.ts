@@ -1,4 +1,4 @@
-import {ADD_COMPLETED_TASK} from "../actionTypes/actionTypes.ts";
+import {ADD_COMPLETED_TASK, UNDO_LOCKED_TASK} from "../actionTypes/actionTypes.ts";
 import {Task} from 'types/quest';
 
 export interface NavState{
@@ -10,8 +10,6 @@ export interface UserState{
     username: string;
 }
 
-
-
 export enum TaskStatusFilter{
     Active = 0,
     Completed,
@@ -19,9 +17,9 @@ export enum TaskStatusFilter{
 }
 
 export interface TaskDataState{
-    completed: Task[];
-    locked: Task[];
     active: Task[];
+    locked: Task[];
+    completed: Task[];
 }
 
 export interface UserTasksState{
@@ -60,8 +58,14 @@ export interface AddCompletedTaskAction {
     payload?: Task;
 }
 
+export interface UndoLockedTaskAction {
+    type: typeof UNDO_LOCKED_TASK;
+    payload: Task;
+}
+
 export type ReducerActions =
     | ReducerActionNumber
     | ReducerActionString
     | ReducerActionBoolean
-    | AddCompletedTaskAction;
+    | AddCompletedTaskAction
+    | UndoLockedTaskAction;

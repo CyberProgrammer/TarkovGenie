@@ -20,9 +20,9 @@ const TasksView = () => {
     const taskStatusFilter = useSelector((state: RootState) => state.tasks.statusFilter) ?? TaskStatusFilter.Active;
 
     // Keeps track of unfiltered task lists
-    const completedTasks = useSelector((state: RootState) => state.tasks.userTaskData.completed);
-    const lockedTasks = useSelector((state: RootState) => state.tasks.userTaskData.locked);
-    const activeTasks = useSelector((state: RootState) => state.tasks.userTaskData.active);
+    const completedTasks = useSelector((state: RootState) => state.tasks.userTaskData.completed ?? []);
+    const lockedTasks = useSelector((state: RootState) => state.tasks.userTaskData.locked ?? []);
+    const activeTasks = useSelector((state: RootState) => state.tasks.userTaskData.active ?? []);
 
     // Redux state for filtering by trader
     const filterByTrader = useSelector((state: RootState) => state.tasks.filterByTrader);
@@ -30,7 +30,10 @@ const TasksView = () => {
 
     // Memoized calculation of filtered tasks
     const filteredTasksList = useMemo(() => {
-        if (taskStatusFilter && filterByTrader && typeof traderID === "number") {
+        if(!Array.isArray(lockedTasks) || !Array.isArray(activeTasks))
+            return [];
+
+        if (filterByTrader && typeof traderID === "number") {
             return getFilteredTasks(taskStatusFilter, completedTasks, lockedTasks, activeTasks, traderID);
         } else {
             return getUnFilteredTasks(taskStatusFilter, completedTasks, lockedTasks, activeTasks);
@@ -73,7 +76,7 @@ const TasksView = () => {
                 </div>
                 <div id={'card-container'} className={'task-view-card-container'}>
                     {filteredTasksList.map((task, index) => (
-                        <TaskCard key={index} task={task}/>
+                        <TaskCard key={index} type={taskStatusFilter} task={task}/>
                     ))}
                 </div>
             </div>

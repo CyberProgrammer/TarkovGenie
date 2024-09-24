@@ -7,9 +7,16 @@ import {useEffect, useState} from "react";
 const Footer = () => {
     const navState = useSelector((state:  RootState) => state.nav);
     const navVisible = navState.navVisible;
-    
+
+    // Using card container height to position footer
     const [cardContainerHeight, setCardContainerHeight] = useState(0);
-    
+
+    const text = {
+        message: "Game content and materials are trademarks and copyrights of Battlestate Games and its\n" +
+            "                                licensors. All rights reserved.",
+        copyright: "TarkovGenie @ 2024 - 2024"
+    }
+
     useEffect(() => {
         const dom = window.document.getElementById('card-container');
 
@@ -17,7 +24,6 @@ const Footer = () => {
         const updateHeight = () => {
             if (dom) {
                 setCardContainerHeight(dom.scrollHeight);
-                console.log("Height: ", cardContainerHeight);
             }
         };
 
@@ -32,10 +38,10 @@ const Footer = () => {
 
             // Observe the element for changes
             observer.observe(dom, {
-                childList: true,    // Watches for added/removed elements
-                subtree: true,      // Watches all descendants
-                attributes: true,   // Watches for attribute changes
-                characterData: true // Watches for text content changes
+                childList: true,
+                subtree: true,
+                attributes: true,
+                characterData: true
             });
 
             // Cleanup observer on component unmount
@@ -49,11 +55,10 @@ const Footer = () => {
                 <div className={`${cardContainerHeight < 750 ? 'footer-container-fixed' : 'footer-container-relative'} ${!navVisible ? 'footer-container-full' : ''} footer-container`}>
                     <div className={'footer-wrapper'}>
                         <div className={'footer-copyright'}>
-                            <p>Game content and materials are trademarks and copyrights of Battlestate Games and its
-                                licensors. All rights reserved. </p>
+                            <p>{text.message}</p>
                         </div>
                         <div className={'footer-rights'}>
-                            <p>TarkovGenie @ 2024 - 2024</p>
+                            <p>{text.copyright}</p>
                         </div>
                     </div>
                 </div>

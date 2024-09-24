@@ -5,32 +5,24 @@ import TasksIcon from '@icons/tasks.svg'
 import ItemsIcon from '@icons/items_needed.svg'
 import HideoutIcon from '@icons/hideout.svg'
 import SettingsIcon from '@icons/settings.svg'
-import UpIcon from '@icons/up.svg'
-import DownIcon from '@icons/down.svg'
 import Logo from '@logos/logo.svg'
 
-import { Link } from 'react-router-dom';
-
-import {useEffect, useRef, useState } from "react";
-
-enum SelectedNav{
-    Dashboard = 1,
-    Tasks,
-    NeededItems,
-    Hideout,
-    Settings
-}
-
+import {useEffect, useMemo, useRef, useState} from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { closeNav, decreaseLevel, increaseLevel } from 'actions/userActions'
-import useWindowWidth from '@hooks/useWindowWidth'
-import { RootState } from '@reducers/rootReducer'
+import { RootState } from '@reducers/rootReducer';
+
+import { closeNav } from 'actions/userActions';
+import useWindowWidth from '@hooks/useWindowWidth';
+
+import TaskList from '../../../data/tasks.json';
+import {SelectedNav} from "@customTypes/enums.ts";
+import LinkComponent from "@components/navigation/link.tsx";
+import UserLevelWrapper from "@components/wrapper/userLevel.tsx";
+import {useTaskUpdates} from "@hooks/useTaskUpdates.ts";
 
 const Navigation = () => {
     const navState = useSelector((state: RootState)=> state.nav);
     const userState = useSelector((state: RootState)=> state.user);
-
-    console.log('Nav:', navState.navVisible);
     const dispatch = useDispatch();
 
     // Determines what route is in view
@@ -38,10 +30,26 @@ const Navigation = () => {
 
     // State of user level
     const level = userState.userLevel;
+    const taskList = TaskList.data.tasks;
+
+    // State of active tasks
+    const currentActiveTasks = useSelector((state: RootState) => state.tasks.userTaskData.active);
+    // State of completed tasks
+    const currentCompletedTasks = useSelector((state: RootState) => state.tasks.userTaskData.completed);
+
+    const links = useMemo(() => [
+        { to: "/", icon: DashboardIcon, label: "Dashboard", value: SelectedNav.Dashboard },
+        { to: "/tasks", icon: TasksIcon, label: "Tasks", value: SelectedNav.Tasks },
+        { to: "/needed-items", icon: ItemsIcon, label: "Needed Items", value: SelectedNav.NeededItems },
+        { to: "/hideout", icon: HideoutIcon, label: "Hideout", value: SelectedNav.Hideout },
+        { to: "/settings", icon: SettingsIcon, label: "Settings", value: SelectedNav.Settings },
+    ], []);
+
+    // Task updates handling
+    useTaskUpdates(taskList, currentActiveTasks, currentCompletedTasks, userState.userLevel);
 
     // State of navigation menu visibility
     const navigationVisibility = navState.navVisible;
-
     const navRef = useRef<HTMLDivElement>(null);
 
     // Keeps track of window width
@@ -52,7 +60,7 @@ const Navigation = () => {
             dispatch(closeNav());
         }
         widthRef.current = width;
-    }, [width]);
+    }, [dispatch, navigationVisibility, width]);
     const handleClickOutside = (event: MouseEvent) => {
         if (widthRef.current <= 650 && navRef.current && !navRef.current.contains(event.target as Node)) {
             dispatch(closeNav());
@@ -79,99 +87,12 @@ const Navigation = () => {
                     <div className="user-profile-wrapper">
 
                     </div>
-                    <div className="user-level-wrapper">
-                        <div className={'user-level-logo'}>
-
-                        </div>
-                        {
-                            /* Level logo here*/
-                        }
-                        <div className={'user-level-value'}>
-                            <p className={'user-level-value-title'}>Level</p>
-                            <h2 className={'user-level'}>{level}</h2>
-                        </div>
-                        <div className={'user-level-controls'}>
-                            <button className={'user-level-control-btn'} onClick={() => {dispatch(increaseLevel())}}>
-                                <img className={'user-level-control-icon'} src={UpIcon} alt={'icon'}/>
-                            </button>
-                            <button className={'user-level-control-btn'} onClick={() => {dispatch(decreaseLevel())}}>
-                                <img className={'user-level-control-icon'} src={DownIcon} alt={'icon'}/>
-                            </button>
-                        </div>
-                    </div>
+                    <UserLevelWrapper level={level} />
                     <div className="navigation-links">
                         <ul>
-                            <li className='navigation-item'>
-                                <Link
-                                    to="/"
-                                    className={`navigation-link ${selected === SelectedNav.Dashboard ? "active" : ""}`}
-                                    onClick={() => setSelected(SelectedNav.Dashboard)}
-                                >
-                                    <div className='navigation-link-image-wrapper'>
-                                        <img className='navigation-link-image' src={DashboardIcon}
-                                             alt="Dashboard icon"/>
-                                    </div>
-                                    <div className='navigation-link-text'>
-                                        Dashboard
-                                    </div>
-                                </Link>
-                            </li>
-                            <li className='navigation-item'>
-                                <Link
-                                    to="/tasks"
-                                    className={`navigation-link ${selected === SelectedNav.Tasks ? "active" : ""}`}
-                                    onClick={() => setSelected(SelectedNav.Tasks)}
-                                >
-                                    <div className='navigation-link-image-wrapper'>
-                                        <img className='navigation-link-image' src={TasksIcon} alt="Tasks icon"/>
-                                    </div>
-                                    <div className='navigation-link-text'>
-                                        Tasks
-                                    </div>
-                                </Link>
-                            </li>
-                            <li className='navigation-item'>
-                                <Link
-                                    to="/needed-items"
-                                    className={`navigation-link ${selected === SelectedNav.NeededItems ? "active" : ""}`}
-                                    onClick={() => setSelected(SelectedNav.NeededItems)}
-                                >
-                                    <div className='navigation-link-image-wrapper'>
-                                        <img className='navigation-link-image' src={ItemsIcon} alt="Needed Items icon"/>
-                                    </div>
-                                    <div className='navigation-link-text'>
-                                        Needed Items
-                                    </div>
-                                </Link>
-                            </li>
-                            <li className='navigation-item'>
-                                <Link
-                                    to="/hideout"
-                                    className={`navigation-link ${selected === SelectedNav.Hideout ? "active" : ""}`}
-                                    onClick={() => setSelected(SelectedNav.Hideout)}
-                                >
-                                    <div className='navigation-link-image-wrapper'>
-                                        <img className='navigation-link-image' src={HideoutIcon} alt="Hideout icon"/>
-                                    </div>
-                                    <div className='navigation-link-text'>
-                                        Hideout
-                                    </div>
-                                </Link>
-                            </li>
-                            <li className='navigation-item'>
-                                <Link
-                                    to="/settings"
-                                    className={`navigation-link ${selected === SelectedNav.Settings ? "active" : ""}`}
-                                    onClick={() => setSelected(SelectedNav.Settings)}
-                                >
-                                    <div className='navigation-link-image-wrapper'>
-                                        <img className='navigation-link-image' src={SettingsIcon} alt="Settings icon"/>
-                                    </div>
-                                    <div className='navigation-link-text'>
-                                        Settings
-                                    </div>
-                                </Link>
-                            </li>
+                            {links.map(({ to, icon, label, value }) => (
+                                <LinkComponent to={to} icon={icon} label={label} key={to} value={value} selected={selected} setSelected={setSelected}/>
+                            ))}
                         </ul>
                     </div>
                 </div>

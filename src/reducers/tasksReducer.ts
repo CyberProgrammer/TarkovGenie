@@ -5,29 +5,37 @@ import {
     DECREASE_TASK_ITEMS_FOUND,
     DECREASE_TASKS_COMPLETED,
     INCREASE_TASK_ITEMS_FOUND,
-    INCREASE_TASKS_COMPLETED
+    INCREASE_TASKS_COMPLETED, UNDO_LOCKED_TASK,
+    UPDATE_ACTIVE_TASKS, UPDATE_COMPLETED_TASKS,
+    UPDATE_LOCKED_TASKS
 } from '../actionTypes/actionTypes.js';
 
-import {ReducerActions, TaskDataState, TaskStatusFilter, UserTasksState} from 'types/types';
-
-import TaskList from '../../data/tasks.json';
 import {Task} from "@customTypes/quest.ts";
+import {ReducerActions, TaskDataState, TaskStatusFilter, UserTasksState} from 'types/types';
+import TaskList from '../../data/tasks.json';
+
+import {getCurrentActive} from "@helpers/getActiveTasks.ts";
+import {getCurrentLocked} from "@helpers/getLockedTasks.ts";
+import {undoCompletedTask} from "@helpers/undoCompletedTask.ts";
 
 const userLevel = 1;
 
-// Just to test the different status filters
-const currentActive : Task[] = TaskList.data.tasks.filter((t) => t.minPlayerLevel <= userLevel);
-const currentLocked : Task[] = TaskList.data.tasks.filter((t) => t.minPlayerLevel > userLevel);
-const currentCompleted : Task[] = [];
+const fullTaskList = TaskList.data.tasks;
 
-const userTaskData : TaskDataState = {
+
+// Just to test the different status filters
+const currentCompleted : Task[] = [];
+const currentActive : Task[] = getCurrentActive(fullTaskList, currentCompleted, userLevel);
+const currentLocked : Task[] = getCurrentLocked(fullTaskList, currentCompleted, currentActive);
+
+const taskData : TaskDataState = {
     active: currentActive,
     locked: currentLocked,
     completed: currentCompleted,
 }
 
 const initialTasksState : UserTasksState = {
-    userTaskData: userTaskData,
+    userTaskData: taskData,
     tasksCompleted: 43,
     taskItemsFound: 54,
     totalTasks: 145,
@@ -77,16 +85,64 @@ const tasksReducer = (state = initialTasksState, action: ReducerActions) => {
         case ADD_COMPLETED_TASK:
             // Check that the payload is a task
             if (action.payload && typeof action.payload === 'object' && 'id' in action.payload) {
+                // Add the newly completed task to the completed task list
+                const updatedCompletedTasks = [...state.userTaskData.completed, action.payload];
+                const updatedActiveTasks = getCurrentActive(fullTaskList, updatedCompletedTasks , userLevel);
+                const updatedLockedTasks = getCurrentLocked(fullTaskList, updatedCompletedTasks, updatedActiveTasks);
+
                 return {
                     ...state,
                     userTaskData: {
                         ...state.userTaskData,
-                        completed: [...state.userTaskData.completed, action.payload],
-                        active: state.userTaskData.active.filter((task) => task !== action.payload),
+                        // Add the task to the completed list
+                        completed: updatedCompletedTasks,
+
+                        // Move the unlocked tasks to active and update active tasks
+                        active: updatedActiveTasks,
+
+                        // Remove the unlocked tasks from the locked list
+                        locked: updatedLockedTasks,
                     }
                 }
             }
             return state;
+        case UNDO_LOCKED_TASK:
+            if (action.payload && typeof action.payload === 'object'){
+                return {
+                    ...state,
+                    userTaskData: {
+                        ...state.userTaskData,
+                        completed: undoCompletedTask(state.userTaskData.completed, action.payload, TaskList.data.tasks),
+                        active: getCurrentActive(fullTaskList, state.userTaskData.completed, userLevel),
+                        locked: getCurrentLocked(fullTaskList, state.userTaskData.completed, state.userTaskData.active),
+                    }
+                }
+            }
+            return state;
+        case UPDATE_ACTIVE_TASKS:
+            return {
+                ...state,
+                userTaskData:{
+                    ...state.userTaskData,
+                    active: action.payload,
+                }
+            }
+        case UPDATE_LOCKED_TASKS:
+            return {
+                ...state,
+                userTaskData:{
+                    ...state.userTaskData,
+                    locked: action.payload,
+                }
+            }
+        case UPDATE_COMPLETED_TASKS:
+            return {
+                ...state,
+                userTaskData:{
+                    ...state.userTaskData,
+                    completed: action.payload
+                }
+            }
         default:
             return state;
     }
