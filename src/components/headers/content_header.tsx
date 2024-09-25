@@ -31,6 +31,7 @@ const ContentHeader = () => {
         default:
             break;
     }
+
     return(
         <>
             <div className={`view-header`}>

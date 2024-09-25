@@ -13,6 +13,7 @@ import
     CHANGE_TRADER_FILTER,
     CHANGE_FILTER_BY, CHANGE_STATUS_FILTER
 } from '../actionTypes/actionTypes';
+
 import {TaskStatusFilter} from "@customTypes/types.ts";
 
 // Action is used to send to the reducer

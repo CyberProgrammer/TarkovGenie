@@ -10,12 +10,13 @@ import {TaskStatusFilter} from "@customTypes/types.ts";
 import {handleCompletedTask, handleUndoTask} from "../../actions/taskActions.ts";
 
 interface ButtonWithIconProps {
-    task?: Task;
-    type?: TaskStatusFilter;
+    task: Task;
+    type: TaskStatusFilter;
 }
 
 const ButtonWithIcon : React.FC<ButtonWithIconProps> = ({task, type}) => {
     const dispatch = useDispatch();
+
     const handleButtonClick = () => {
         // Check if task is defined and has an id
         if (task?.id && type == TaskStatusFilter.Active) {
@@ -26,29 +27,30 @@ const ButtonWithIcon : React.FC<ButtonWithIconProps> = ({task, type}) => {
         }
     }
 
-    let content;
-    if(type === TaskStatusFilter.Active){
-        content = (
-            <>
-                <img className={'btn-icon'} src={CompleteIcon} alt={'icon'}/>
-                <h3>Complete</h3>
-            </>
-        )
-    } else if(type === TaskStatusFilter.Locked){
-        content = (
-            <>
-                <img className={'btn-icon'} src={LockedIcon} alt={'icon'}/>
-                <h3>Locked</h3>
-            </>
-        )
-    } else{
-        content = (
-            <>
-                <img className={'btn-icon'} src={UndoIcon} alt={'icon'}/>
-                <h3>Undo</h3>
-            </>
-        )
+    const iconMap = {
+        [TaskStatusFilter.Active]: {
+            icon: CompleteIcon,
+            label: 'Complete',
+        },
+        [TaskStatusFilter.Locked]: {
+            icon: LockedIcon,
+            label: 'Locked',
+        },
+        [TaskStatusFilter.Completed]: {
+            icon: UndoIcon,
+            label: 'Undo',
+        }
     }
+
+    const { icon, label } = iconMap[type];
+
+    // Create the button content
+    const content = (
+        <>
+            <img className={'btn-icon'} src={icon} alt={'icon'}/>
+            <h3>{label}</h3>
+        </>
+    )
 
     return(
         <button onClick={handleButtonClick} className={'btn-with-icon'} disabled={type === TaskStatusFilter.Locked}>

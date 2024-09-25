@@ -32,11 +32,6 @@ const Navigation = () => {
     const level = userState.userLevel;
     const taskList = TaskList.data.tasks;
 
-    // State of active tasks
-    const currentActiveTasks = useSelector((state: RootState) => state.tasks.userTaskData.active);
-    // State of completed tasks
-    const currentCompletedTasks = useSelector((state: RootState) => state.tasks.userTaskData.completed);
-
     const links = useMemo(() => [
         { to: "/", icon: DashboardIcon, label: "Dashboard", value: SelectedNav.Dashboard },
         { to: "/tasks", icon: TasksIcon, label: "Tasks", value: SelectedNav.Tasks },
@@ -46,7 +41,7 @@ const Navigation = () => {
     ], []);
 
     // Task updates handling
-    useTaskUpdates(taskList, currentActiveTasks, currentCompletedTasks, userState.userLevel);
+    useTaskUpdates(taskList, userState.userLevel);
 
     // State of navigation menu visibility
     const navigationVisibility = navState.navVisible;

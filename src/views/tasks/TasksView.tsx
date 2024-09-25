@@ -1,7 +1,6 @@
 import '@styles/views/tasks/tasks.css';
 
 import TaskCard from "@components/cards/task_card";
-import TradersList from "@components/list/trader_list.tsx";
 
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "@reducers/rootReducer.ts";
@@ -10,8 +9,10 @@ import {useEffect, useMemo} from "react";
 import {TaskStatusFilter} from "@customTypes/types.ts";
 import {getFilteredTasks} from "@helpers/getFilteredTasksByTrader.ts";
 import {getUnFilteredTasks} from "@helpers/getUnfilteredTaskList.ts";
-import StatusFilterButton from "@components/buttons/status_filter_button.tsx";
 import TraderFilterButton from "@components/buttons/trader_filter_button.tsx";
+import TradersList from "@components/list/trader_list.tsx";
+import StatusFilterButton from "@components/buttons/status_filter_button.tsx";
+
 
 const TasksView = () => {
     const dispatch = useDispatch();
@@ -30,7 +31,7 @@ const TasksView = () => {
 
     // Memoized calculation of filtered tasks
     const filteredTasksList = useMemo(() => {
-        if(!Array.isArray(lockedTasks) || !Array.isArray(activeTasks))
+        if(!Array.isArray(lockedTasks) || !Array.isArray(activeTasks) || !Array.isArray(completedTasks))
             return [];
 
         if (filterByTrader && typeof traderID === "number") {

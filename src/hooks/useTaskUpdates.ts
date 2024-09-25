@@ -1,16 +1,22 @@
 
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import { updateActiveTasks, updateCompletedTasks, updateLockedTasks } from 'actions/taskActions.ts';
 import { getCompletedTasks } from "@helpers/getCompletedTasks.ts";
 import { updateTasksPostCompletion } from "@helpers/updateTasksPostCompletion.ts";
 import {Task} from "@customTypes/quest.ts";
+import {RootState} from "@reducers/rootReducer.ts";
 
-
-export const useTaskUpdates = (taskList: Task[], currentActiveTasks: Task[], currentCompletedTasks: Task[], userLevel: number) => {
+export const useTaskUpdates = (taskList: Task[], userLevel: number) => {
     const dispatch = useDispatch();
 
+    const currentActiveTasks = useSelector((state: RootState) => state.tasks.userTaskData.active);
+    const currentCompletedTasks = useSelector((state: RootState) => state.tasks.userTaskData.completed);
     useEffect(() => {
+        if(!Array.isArray(currentActiveTasks) || !Array.isArray(currentCompletedTasks)){
+            return;
+        }
+
         const updatedTasks = updateTasksPostCompletion(taskList, currentActiveTasks, currentCompletedTasks, userLevel);
 
         if (updatedTasks) {
@@ -24,6 +30,10 @@ export const useTaskUpdates = (taskList: Task[], currentActiveTasks: Task[], cur
     }, [userLevel, currentCompletedTasks]);
 
     useEffect(() => {
+        if(!Array.isArray(currentCompletedTasks)){
+            return;
+        }
+
         const newCompletedTasks = getCompletedTasks(currentCompletedTasks, userLevel);
         dispatch(updateCompletedTasks(newCompletedTasks));
     }, [userLevel]);

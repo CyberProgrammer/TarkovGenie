@@ -16,7 +16,6 @@ export const getFilteredTasks = (
         [TaskStatusFilter.Locked]: lockedTasks
     };
 
-
     const trader = TraderList.data.traders[traderID];
     const tasks = taskMap[statusFilter];
 

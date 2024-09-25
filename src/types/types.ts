@@ -1,4 +1,9 @@
-import {ADD_COMPLETED_TASK, UNDO_LOCKED_TASK} from "../actionTypes/actionTypes.ts";
+import {
+    ADD_COMPLETED_TASK,
+    UNDO_LOCKED_TASK,
+    UPDATE_ACTIVE_TASKS, UPDATE_COMPLETED_TASKS,
+    UPDATE_LOCKED_TASKS
+} from "../actionTypes/actionTypes.ts";
 import {Task} from 'types/quest';
 
 export interface NavState{
@@ -50,12 +55,27 @@ export interface ReducerActionString{
 
 export interface ReducerActionBoolean{
     type:string;
-    payload?:boolean;
+    payload:boolean;
 }
 
 export interface AddCompletedTaskAction {
     type: typeof ADD_COMPLETED_TASK;
-    payload?: Task;
+    payload: Task;
+}
+
+export interface updateActiveTasksAction{
+    type: typeof UPDATE_ACTIVE_TASKS;
+    payload: Task[];
+}
+
+export interface updateLockedTasksAction{
+    type: typeof UPDATE_LOCKED_TASKS;
+    payload: Task[];
+}
+
+export interface updateCompletedTasksAction{
+    type: typeof UPDATE_COMPLETED_TASKS;
+    payload: Task[];
 }
 
 export interface UndoLockedTaskAction {
@@ -68,4 +88,7 @@ export type ReducerActions =
     | ReducerActionString
     | ReducerActionBoolean
     | AddCompletedTaskAction
-    | UndoLockedTaskAction;
+    | UndoLockedTaskAction
+    | updateCompletedTasksAction
+    | updateLockedTasksAction
+    | updateActiveTasksAction;

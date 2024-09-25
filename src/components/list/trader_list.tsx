@@ -39,9 +39,13 @@ const TradersList = () => {
         dispatch(changeTraderFilter(id))
     }
 
+    // Scrolls based on trader index
+    const scrollLeft = traderIndex - 3;
+    const scrollRight = traderIndex + 3;
+
     return (
         <div className="trader-scroll-container">
-            <button className="scroll-btn" onClick={() => scrollToTrader(traderIndex - 3)}>◀</button>
+            <button className="scroll-btn" onClick={() => scrollToTrader(scrollLeft)}>◀</button>
 
             <div className="trader-list">
                 {traders.map((trader, index) => (
@@ -57,7 +61,7 @@ const TradersList = () => {
                 ))}
             </div>
 
-            <button className="scroll-btn" onClick={() => scrollToTrader(traderIndex + 3)}>▶</button>
+            <button className="scroll-btn" onClick={() => scrollToTrader(scrollRight)}>▶</button>
         </div>
     )
 }
