@@ -46,9 +46,10 @@ const Dashboard = () => {
                     </div>
                 </div>
                 <div className={'dashboard-cards-wrapper'}>
-                    { cards.map((card) => {
+                    { cards.map((card, index) => {
                         return (
                             <DashboardCard
+                                key={index}
                                 title={card.title}
                                 stats={card.stats}
                                 tooltip={card.tooltip}

@@ -75,7 +75,7 @@ const TasksView = () => {
                         </div>
                     </div>
                 </div>
-                <div id={'card-container'} className={'task-view-card-container'}>
+                <div id={'content-container'} className={'task-view-card-container'}>
                     {filteredTasksList.map((task, index) => (
                         <TaskCard key={index} type={taskStatusFilter} task={task}/>
                     ))}

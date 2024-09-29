@@ -18,7 +18,7 @@ const Footer = () => {
     }
 
     useEffect(() => {
-        const dom = window.document.getElementById('card-container');
+        const dom = window.document.getElementById('content-container');
 
         // Function to update height
         const updateHeight = () => {

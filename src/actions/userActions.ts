@@ -8,8 +8,6 @@ import
     DECREASE_TASKS_COMPLETED,
     INCREASE_TASK_ITEMS_FOUND,
     DECREASE_TASK_ITEMS_FOUND,
-    INCREASE_HIDEOUT_ITEMS_FOUND,
-    DECREASE_HIDEOUT_ITEMS_FOUND,
     CHANGE_TRADER_FILTER,
     CHANGE_FILTER_BY, CHANGE_STATUS_FILTER
 } from '../actionTypes/actionTypes';
@@ -91,20 +89,6 @@ const toggleFilterBy = (filter: boolean) => {
     }
 }
 
-// Hideout items status
-const increaseHideoutItemsFound = () => {
-    return {
-        type: INCREASE_HIDEOUT_ITEMS_FOUND,
-    }
-}
-
-const decreaseHideoutItemsFound = () => {
-    return {
-        type: DECREASE_HIDEOUT_ITEMS_FOUND,
-
-    }
-}
-
 export
 {
     toggleNav,
@@ -115,8 +99,6 @@ export
     decreaseTasksCompleted,
     increaseTaskItemsFound,
     decreaseTaskItemsFound,
-    increaseHideoutItemsFound,
-    decreaseHideoutItemsFound,
     changeTraderFilter,
     changeStatusFilter,
     toggleFilterBy,

@@ -1,0 +1,126 @@
+@media screen and (max-width: 1920px) {
+	#app .hideout-card-grid{
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+@media screen and (max-width: 1200px) {
+	#app .hideout-card-grid{
+		grid-template-columns: repeat(1, 1fr);
+	}
+}
+
+.hideout-card-grid{
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 15px;
+	width: 90%;
+	margin: 5% auto 10% auto;
+}
+
+.hideout-card{
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	text-align: center;
+	padding: 10px 0 5px 0;
+	border-radius: 10px;
+	background-color: var(--card-primary-background);
+}
+
+.hideout-card-header{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	height: 30px;
+}
+
+.station-name, .station-level{
+	margin: 0 35px;
+}
+
+.hideout-card-description{
+	padding: 5px 15px;
+}
+
+/* Requirement */
+.hideout-card-requirements{
+	background-color: #242f35;
+	padding: 25px 0;
+}
+
+.hideout-card-requirement{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+}
+
+.requirement-count{
+	margin: 0 15px;
+}
+
+.hideout-card-controls{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 5px;
+	bottom: 0;
+}
+
+.upgrade-btn{
+	border: none;
+	padding: 5px 10px;
+	border-radius: 5px;
+	color: #489b41;
+	background-color: #283729;
+	margin: 5px;
+}
+
+.downgrade-btn{
+	border: none;
+	padding: 5px 10px;
+	border-radius: 5px;
+	color: #ed4336;
+	background-color: #432725;
+	margin: 5px;
+}
+
+.locked-btn{
+	border: none;
+	padding: 5px 10px;
+	border-radius: 5px;
+	color: white;
+	background-color: darkgray;
+	margin: 5px;
+}
+
+.hideout-header-controls{
+	display: flex;
+	justify-content: center;
+	width: 90%;
+	overflow-x: auto;
+	overflow-y: hidden;
+	scrollbar-width: thin;
+	padding: 0 10px;
+	margin: 25px auto 0 auto;
+	background-color: var(--satin-soft-blue-color);
+	border-radius: 10px;
+}
+
+.hideout-header-btn{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100px;
+	height: 59px;
+	color: white;
+	text-align: center;
+	margin: 0 10px;
+	background-color: transparent;
+	border: none;
+}
+
+.selected-btn{
+	border-bottom: 2px solid white !important;
+}

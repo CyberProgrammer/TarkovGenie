@@ -15,6 +15,7 @@ import {useSelector} from 'react-redux';
 import useWindowWidth from './hooks/useWindowWidth';
 import {useEffect, useRef } from 'react';
 import TasksView from '@views/tasks/TasksView';
+import Hideout from "@views/hideout/hideout.tsx";
 
 function App() {
     const navState = useSelector((state: RootState) => state.nav);
@@ -40,6 +41,7 @@ function App() {
                         <Routes>
                             <Route path="/" element={<Dashboard/>}/>
                             <Route path="/tasks" element={<TasksView/>}/>
+                            <Route path="/hideout" element={<Hideout />}/>
                         </Routes>
                         <Footer/>
                     </div>
