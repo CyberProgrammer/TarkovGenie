@@ -5,7 +5,11 @@ import {RootState} from "@reducers/rootReducer.ts";
 import HideoutCardControls from "@components/controls/hideoutCardControls.tsx";
 import {UserStationData} from "@customTypes/hideout.ts";
 import {getUpgradableStations} from "@helpers/getUpgradableStations.ts";
-import {useState} from "react";
+import {useMemo, useState} from "react";
+import {getStationDetails} from "@helpers/hideout/getStationDetails.ts";
+import {getUpgradeRequirements} from "@helpers/hideout/getUpgradeRequirements.ts";
+import {isStationUpgradable} from "@helpers/hideout/isStationUpgradable.ts";
+import {getStationLevelRequirements} from "@helpers/hideout/getStationLevelRequirements.ts";
 
 const HideoutView = () => {
     const stationData = useSelector((state: RootState) => state.hideout.stationData);
@@ -14,61 +18,22 @@ const HideoutView = () => {
     // Filter by (All, Upgradable, Locked)
     const [selectedFilter, setSelectedFilter] = useState('All');
 
-    const upgradableStations = getUpgradableStations(stationData, userStations);
-    const lockedStations = userStations.filter((station) => {
-        return !upgradableStations.find((upgradableStation) => upgradableStation.id === station.id);
-    })
+    const upgradableStations = useMemo(() => getUpgradableStations(stationData, userStations), [stationData, userStations]);
 
-    let selectedStations = [];
-    if(selectedFilter === 'All') {
-        selectedStations = userStations;
-    } else if(selectedFilter === 'Upgradable') {
-        selectedStations = upgradableStations;
-    } else{
-        selectedStations = lockedStations;
-    }
+    const lockedStations = useMemo(() => userStations.filter(
+        (station) => !upgradableStations.find((upgradableStation) => upgradableStation.id === station.id)
+    ), [upgradableStations, userStations]);
 
-    const getStationDetails = (id: string) => {
-        const stationDetails = stationData.find((station) => station.id === id);
-        const currentStation = userStations.find((station) => station.id === id);
-
-        if(stationDetails && currentStation) {
-            if (currentStation.level === 0 || currentStation.level === 1) {
-                return stationDetails.levels?.[0]?.description || "";
-            }
-
-            const levelIndex = currentStation.level - 1;
-            if (stationDetails.levels && stationDetails.levels[levelIndex]?.description) {
-                return stationDetails.levels[levelIndex].description;
-            }
+    const filteredStations = useMemo(() => {
+        switch (selectedFilter) {
+            case 'Upgradable':
+                return upgradableStations;
+            case 'Locked':
+                return lockedStations;
+            default:
+                return userStations;
         }
-
-        return "";
-    }
-
-    const isStationUpgradable = (id: string) => {
-        const stationDetails = stationData.find((station) => station.id === id);
-        const station = userStations.find((station) => station.id === id);
-
-        if(station && stationDetails){
-            const stationLevel = station.level;
-            return stationDetails.levels.length > stationLevel;
-        }
-
-        return false;
-    }
-
-    const getUpgradeRequirements = (id: string) => {
-        const stationDetails = stationData.find((station) => station.id === id);
-        const station = userStations.find((station) => station.id === id);
-
-        if(station && stationDetails && isStationUpgradable(id)){
-            const stationLevels = stationDetails.levels;
-            return stationLevels[station.level].itemRequirements;
-        }
-
-        return [];
-    }
+    }, [selectedFilter, userStations, upgradableStations, lockedStations]);
 
 
     return(
@@ -76,51 +41,66 @@ const HideoutView = () => {
             <div className={'hideout-view'}>
                 <div className={'hideout-view-header'}>
                     <div className={'hideout-header-controls'}>
-                        <button
-                            className={`hideout-header-btn ${selectedFilter === 'All' ? 'selected-btn' : ''}`}
-                            onClick={() => setSelectedFilter('All')}
-                        >
-                            All
-                        </button>
-                        <button
-                            className={`hideout-header-btn ${selectedFilter === 'Upgradable' ? 'selected-btn' : ''}`}
-                            onClick={() => setSelectedFilter('Upgradable')}
-                        >
-                            Upgradable
-                        </button>
-                        <button
-                            className={`hideout-header-btn ${selectedFilter === 'Locked' ? 'selected-btn' : ''}`}
-                            onClick={() => setSelectedFilter('Locked')}
-                        >
-                            Locked
-                        </button>
+                        {['All', 'Upgradable', 'Locked'].map((filter) => (
+                            <button
+                                key={filter}
+                                className={`hideout-header-btn ${selectedFilter === filter ? 'selected-btn' : ''}`}
+                                onClick={() => setSelectedFilter(filter)}
+                            >
+                                {filter}
+                            </button>
+                        ))}
                     </div>
                 </div>
                 <div className={'hideout-view-container'}>
                     <div id={'content-container'} className={'hideout-card-grid'}>
-                        {selectedStations.map((station, index) => (
-                            <div key={index} className={'hideout-card'}>
+                        {filteredStations.map((station) => (
+                            <div key={station.id} className={'hideout-card'}>
                                 <div className={'hideout-card-header'}>
-                                    <h3 className={'station-name'}>{station.name}</h3>
+                                    <div className={'hideout-card-header-name'}>
+                                        <img src={station.imageLink} alt={station.id}/>
+                                        <h3 className={'station-name'}>{station.name}</h3>
+                                    </div>
+
                                     <h4 className={'station-level'}>Level {station.level}</h4>
                                 </div>
                                 <div className={'hideout-card-description'}>
-                                    <p>{getStationDetails(station.id)}</p>
+                                    <p>{getStationDetails(station.id, stationData, userStations)}</p>
                                 </div>
                                 <div className={'hideout-card-requirements'}>
-                                    { getUpgradeRequirements(station.id).map((requirement, index) => (
-                                          <div key={index} className={'hideout-card-requirement'}>
-                                              <img src={requirement.item.iconLink} alt={'requirement'}/>
-                                              <h3 className={'requirement-count'}>{requirement.count}</h3>
-                                              <h3>{requirement.item.name}</h3>
-                                          </div>
-                                    ))}
+                                    {
+                                        station.level === stationData.find((st) => st.id === station.id)?.levels.length && (
+                                            <div>
+                                                <h3>Maxed level</h3>
+                                            </div>
+                                        )
+                                    }
+
+                                    {getUpgradeRequirements(station.id, stationData, userStations)?.length > 0 && (
+                                        getUpgradeRequirements(station.id, stationData, userStations).map((requirement, index) => (
+                                            <div key={index} className={'hideout-card-requirement'}>
+                                                <img src={requirement.item.iconLink} alt={'requirement'} />
+                                                <h3 className={'requirement-count'}>{requirement.count}</h3>
+                                                <h3>{requirement.item.name}</h3>
+                                            </div>
+                                        ))
+                                    )}
+
+                                    {
+                                        getStationLevelRequirements(station.id, stationData, userStations).map((requirement, index) => (
+                                            <div key={index} className={'hideout-card-requirement'}>
+                                                <img src={requirement.station.imageLink} alt={'requirement'}/>
+                                                <h3>{requirement.station.name}: Level {requirement.level}</h3>
+                                            </div>
+                                        ))
+                                    }
                                 </div>
                                 <HideoutCardControls
-                                    key={index}
                                     station={station}
                                     isStationUpgradable={isStationUpgradable}
-                                    isLocked={selectedFilter === 'Locked'}
+                                    stationData={stationData}
+                                    userStations={userStations}
+                                    lockedStations={lockedStations}
                                 />
                             </div>
                         ))}

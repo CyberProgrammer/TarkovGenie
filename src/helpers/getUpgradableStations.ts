@@ -6,7 +6,7 @@ export const getUpgradableStations = (data: HideoutStation[], stations: UserStat
         // Get the station data
         const stationDetails = data.find((station) => station.id === userStation.id);
 
-        if(!stationDetails) {
+        if(!stationDetails || !stationDetails.levels) {
             return false;
         }
 
@@ -14,6 +14,7 @@ export const getUpgradableStations = (data: HideoutStation[], stations: UserStat
         const currentLevel = userStation.level;
 
         // Find the next level the user can build (currentLevel + 1)
+
         const nextLevelDetails = stationDetails?.levels.find((level) => level.level === currentLevel+1);
 
         if(!nextLevelDetails) {

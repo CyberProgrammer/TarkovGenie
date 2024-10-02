@@ -2,6 +2,7 @@ export interface UserStationData {
     id: string;
     name: string;
     level: number;
+    imageLink: string;
 }
 
 export interface HideoutStation {

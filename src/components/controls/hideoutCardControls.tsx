@@ -1,41 +1,51 @@
-import {UserStationData} from "@customTypes/hideout.ts";
-import {useDispatch} from "react-redux";
-import {decreaseHideoutLevel, increaseHideoutLevel} from "../../actions/hideoutActions.ts";
+import { HideoutStation, UserStationData } from "@customTypes/hideout";
+import { useDispatch } from "react-redux";
+import { decreaseHideoutLevel, increaseHideoutLevel } from "../../actions/hideoutActions";
 
 interface HideoutCardControlsProps {
-    station: UserStationData,
-    isStationUpgradable: (id:string) => boolean,
-    isLocked: boolean,
+    station: UserStationData;
+    isStationUpgradable: (id: string, stationData: HideoutStation[], userStations: UserStationData[]) => boolean;
+    stationData: HideoutStation[];
+    userStations: UserStationData[];
+    lockedStations: HideoutStation[];
 }
 
-const HideoutCardControls = ({ station, isStationUpgradable, isLocked}: HideoutCardControlsProps) => {
+const HideoutCardControls = ({ station, isStationUpgradable, lockedStations, stationData, userStations}: HideoutCardControlsProps) => {
     const dispatch = useDispatch();
+
+    const handleUpgrade = () => dispatch(increaseHideoutLevel(station.id));
+    const handleDowngrade = () => dispatch(decreaseHideoutLevel(station.id));
+
+    // Use the station.id to determine if the station is locked
+    const isLocked = !!lockedStations.find((lockedStation) => lockedStation.id === station.id);
+    const buttonClass = isLocked ? 'locked-btn' : '';
+
+    const canUpgrade = isStationUpgradable(station.id, stationData, userStations);
 
     return (
         <div className="hideout-card-controls">
             {station.level === 0 ? (
                 <button
-                    className={isLocked ? 'locked-btn' : 'upgrade-btn'}
-                    onClick={() => dispatch(increaseHideoutLevel(station.id))}
+                    className={`${buttonClass} upgrade-btn`}
+                    onClick={handleUpgrade}
                     disabled={isLocked}
                 >
                     BUILD LEVEL 1
                 </button>
             ) : (
                 <>
-                    {isStationUpgradable(station.id) && (
+                    {canUpgrade && (
                         <button
-                            className={isLocked ? 'locked-btn' : 'upgrade-btn'}
-                            onClick={() => dispatch(increaseHideoutLevel(station.id))}
+                            className={`${buttonClass} upgrade-btn`}
+                            onClick={handleUpgrade}
                             disabled={isLocked}
                         >
                             UPGRADE TO LEVEL {station.level + 1}
                         </button>
                     )}
                     <button
-                        className={isLocked ? 'locked-btn' : 'downgrade-btn'}
-                        onClick={() => dispatch(decreaseHideoutLevel(station.id))}
-                        disabled={isLocked}
+                        className={`downgrade-btn`}
+                        onClick={handleDowngrade}
                     >
                         DOWNGRADE TO LEVEL {station.level - 1}
                     </button>

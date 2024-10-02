@@ -21,11 +21,12 @@
 .hideout-card{
 	display: flex;
 	flex-direction: column;
-	justify-content: space-between;
+	/*justify-content: space-evenly;*/
 	text-align: center;
 	padding: 10px 0 5px 0;
 	border-radius: 10px;
 	background-color: var(--card-primary-background);
+	height: fit-content;
 }
 
 .hideout-card-header{
@@ -33,18 +34,42 @@
 	align-items: center;
 	justify-content: space-between;
 	height: 30px;
+	max-height: 10%;
+	margin: 10px 0 0 0;
 }
 
-.station-name, .station-level{
+.hideout-card-header-name{
+	display: flex;
+	align-items: center;
+}
+
+.hideout-card-header-name img{
+	height: 50px;
+	width: auto;
+	margin: 0 10px 0 20px;
+}
+
+.station-level{
 	margin: 0 35px;
 }
 
 .hideout-card-description{
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	padding: 5px 15px;
+	min-height: 100px;
+	height: 150px;
+	max-height: 350px;
 }
 
 /* Requirement */
 .hideout-card-requirements{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 80%;
 	background-color: #242f35;
 	padding: 25px 0;
 }
@@ -53,7 +78,6 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-
 }
 
 .requirement-count{
