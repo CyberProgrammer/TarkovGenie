@@ -10,6 +10,7 @@ import {getStationDetails} from "@helpers/hideout/getStationDetails.ts";
 import {getUpgradeRequirements} from "@helpers/hideout/getUpgradeRequirements.ts";
 import {isStationUpgradable} from "@helpers/hideout/isStationUpgradable.ts";
 import {getStationLevelRequirements} from "@helpers/hideout/getStationLevelRequirements.ts";
+import {getTraderLevelRequirements} from "@helpers/hideout/getTraderLevelRequirements.ts";
 
 const HideoutView = () => {
     const stationData = useSelector((state: RootState) => state.hideout.stationData);
@@ -75,8 +76,9 @@ const HideoutView = () => {
                                             </div>
                                         )
                                     }
-
-                                    {getUpgradeRequirements(station.id, stationData, userStations)?.length > 0 && (
+                                    {
+                                        /* Show item requirements */
+                                        getUpgradeRequirements(station.id, stationData, userStations)?.length > 0 && (
                                         getUpgradeRequirements(station.id, stationData, userStations).map((requirement, index) => (
                                             <div key={index} className={'hideout-card-requirement'}>
                                                 <img src={requirement.item.iconLink} alt={'requirement'} />
@@ -85,12 +87,25 @@ const HideoutView = () => {
                                             </div>
                                         ))
                                     )}
-
                                     {
+                                        /* Show station requirements */
                                         getStationLevelRequirements(station.id, stationData, userStations).map((requirement, index) => (
                                             <div key={index} className={'hideout-card-requirement'}>
                                                 <img src={requirement.station.imageLink} alt={'requirement'}/>
                                                 <h3>{requirement.station.name}: Level {requirement.level}</h3>
+                                            </div>
+                                        ))
+                                    }
+                                    {
+                                        /* Show trader requirements */
+                                        getTraderLevelRequirements(station.id, stationData, userStations).map((requirement, index) => (
+                                            <div key={index} className={'hideout-card-requirement'}>
+                                                {'imageLink' in requirement.trader && requirement.id != "-2" && (
+                                                    <>
+                                                        <img src={requirement.trader.imageLink} alt={'Trader'}/>
+                                                        <h3>{requirement.trader.name} (Level {requirement.value})</h3>
+                                                    </>
+                                                )}
                                             </div>
                                         ))
                                     }

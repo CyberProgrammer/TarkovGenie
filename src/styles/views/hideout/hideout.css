@@ -12,7 +12,7 @@
 
 .hideout-card-grid{
 	display: grid;
-	grid-template-columns: repeat(3, 1fr);
+	grid-template-columns: repeat(auto-fit, minmax(25%, 1fr));
 	gap: 15px;
 	width: 90%;
 	margin: 5% auto 10% auto;
@@ -21,7 +21,6 @@
 .hideout-card{
 	display: flex;
 	flex-direction: column;
-	/*justify-content: space-evenly;*/
 	text-align: center;
 	padding: 10px 0 5px 0;
 	border-radius: 10px;
@@ -78,10 +77,16 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	margin: 2px 0;
+}
+
+.hideout-card-requirement img{
+	height: 45px;
+	margin: 0 15px;
 }
 
 .requirement-count{
-	margin: 0 15px;
+	margin: 0 15px 0 0;
 }
 
 .hideout-card-controls{
