@@ -7,7 +7,6 @@
 @media screen and (max-width: 650px){
 	#app .footer-container{
 		width: 100%;
-		/*position: relative;*/
 	}
 }
 
@@ -24,7 +23,7 @@
 }
 
 .footer-container-fixed{
-	position: fixed;
+	position: fixed !important;
 	bottom: 0;
 	width: calc(100% - 256px);
 }

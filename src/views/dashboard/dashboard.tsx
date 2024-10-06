@@ -2,6 +2,8 @@ import DashboardCard from '@components/cards/dashboard_card';
 import '@styles/views/dashboard/dashboard.css'
 
 import Scav from '@images/scav.png';
+import {useSelector} from "react-redux";
+import {RootState} from "@reducers/rootReducer.ts";
 
 const Dashboard = () => {
 
@@ -15,23 +17,38 @@ const Dashboard = () => {
         ),
     }
 
+    // Tasks completed count
+    const tasksCompletedCount = useSelector((state: RootState) => state.tasks.tasksCompleted);
+    // Tasks total count
+    const totalTaskCount = useSelector((state: RootState) => state.tasks.tasksCount);
+    // Task items found
+    const taskItemsFound = useSelector((state: RootState) => state.tasks.taskItemsFound);
+    // Total items to be found
+    const totalTaskItems = useSelector((state: RootState) => state.tasks.totalTaskItems);
+
+    // Hideout items found
+    const hideoutItemsFound = useSelector((state: RootState) => state.hideout.hideoutItemsFound);
+    // Hideout items total
+    const totalHideoutItems = useSelector((state: RootState) => state.hideout.totalHideoutItemsCount);
+
     const cards =
         [{
             title: 'Tasks Completed',
-            stats: '43/145',
+            stats: `${tasksCompletedCount}/${totalTaskCount}`,
             tooltip: 'The number of tasks you have completed'
         },
         {
             title: 'Task Items',
-            stats: '54/924',
+            stats: `${taskItemsFound}/${totalTaskItems}`,
             tooltip: 'Includes FIR, non-FIR, and planted items.',
             className: 'dashboard-card-center'
         },
         {
             title: 'Hideout Items',
-            stats: '54/300',
+            stats: `${hideoutItemsFound}/${totalHideoutItems}`,
             tooltip: 'The number of hideout items needed.'
         }]
+
 
     return(
         <>

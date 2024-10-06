@@ -2,8 +2,17 @@ import { ReducerActionString } from 'types/types'
 import {DECREASE_HIDEOUT_LEVEL, INCREASE_HIDEOUT_LEVEL} from "../actionTypes/actionTypes.ts";
 import HideoutData from "@data/hideout.json";
 
+const totalItemsCount = HideoutData.data.hideoutStations.reduce((acc, station) => {
+    station.levels.forEach((level) => {
+        acc += level.itemRequirements.length;
+    });
+    return acc;
+}, 0);
+
 const initialHideoutState = {
     stationData: HideoutData.data.hideoutStations,
+    hideoutItemsFound: 0,
+    totalHideoutItemsCount: totalItemsCount,
     userStationData: [
         {
             id: "5d388e97081959000a123acf",

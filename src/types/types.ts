@@ -30,8 +30,8 @@ export interface TaskDataState{
 export interface UserTasksState{
     userTaskData: TaskDataState;
     tasksCompleted: number;
+    tasksCount: number;
     taskItemsFound: number;
-    totalTasks: number;
     totalTaskItems: number;
     traderFilter: number;
     statusFilter: TaskStatusFilter;

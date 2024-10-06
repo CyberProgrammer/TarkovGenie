@@ -36,9 +36,9 @@ const taskData : TaskDataState = {
 
 const initialTasksState : UserTasksState = {
     userTaskData: taskData,
-    tasksCompleted: 43,
-    taskItemsFound: 54,
-    totalTasks: 145,
+    tasksCompleted: 0,
+    tasksCount: fullTaskList.length,
+    taskItemsFound:  0,
     totalTaskItems: 924,
     traderFilter: 0,
     statusFilter: TaskStatusFilter.Active,
@@ -92,6 +92,7 @@ const tasksReducer = (state = initialTasksState, action: ReducerActions) => {
 
                 return {
                     ...state,
+                    tasksCompleted: updatedCompletedTasks.length,
                     userTaskData: {
                         ...state.userTaskData,
                         // Add the task to the completed list
