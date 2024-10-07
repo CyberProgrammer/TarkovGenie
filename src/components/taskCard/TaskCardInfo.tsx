@@ -20,7 +20,6 @@ const TaskCardInfo: React.FC<TaskCardInfo> = ({task}) => {
                     <>
                         <div className={'task-card-row task-statistics'}>
                             <p>Level {task.minPlayerLevel}</p>
-
                         </div>
                         <div className={'task-card-row task-wiki'}>
                             <img className={'task-card-icon'} src={InfoIcon} alt={'icon'}/>

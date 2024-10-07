@@ -25,6 +25,7 @@ export interface TaskDataState{
     active: Task[];
     locked: Task[];
     completed: Task[];
+    allTasks: Task[];
 }
 
 export interface UserTasksState{

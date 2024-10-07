@@ -1,11 +1,15 @@
 import ChangeLevelBtn from "@components/buttons/change_level_btn.tsx";
-import React from "react";
+import {useSelector} from "react-redux";
+import {RootState} from "@reducers/rootReducer.ts";
+import {useTaskUpdates} from "@hooks/useTaskUpdates.ts";
 
-interface Props {
-    level: number
-}
+const UserLevelWrapper  = () => {
+    const userState = useSelector((state: RootState)=> state.user);
+    const taskList = useSelector((state: RootState) => state.tasks.userTaskData.allTasks)
+    const level = userState.userLevel;
 
-const UserLevelWrapper : React.FC<Props> = ({level}) => {
+    useTaskUpdates(taskList);
+
     return (
         <div className="user-level-wrapper">
             <div className={'user-level-logo'}>

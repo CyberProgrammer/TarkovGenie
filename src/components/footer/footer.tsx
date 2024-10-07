@@ -19,14 +19,12 @@ const Footer = () => {
 
     useEffect(() => {
         const dom = window.document.getElementById('content-container');
-
         // Function to update height
         const updateHeight = () => {
             if (dom) {
                 setCardContainerHeight(dom.scrollHeight);
             }
         };
-
         // Initial height calculation
         updateHeight();
 
@@ -39,15 +37,12 @@ const Footer = () => {
             // Observe the element for changes
             observer.observe(dom, {
                 childList: true,
-                subtree: true,
-                attributes: true,
-                characterData: true
             });
 
             // Cleanup observer on component unmount
             return () => observer.disconnect();
         }
-    }, [cardContainerHeight]);
+    }, []);
 
     return(
         <>

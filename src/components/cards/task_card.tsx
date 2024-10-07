@@ -13,7 +13,7 @@ interface TaskCardProps{
     type: TaskStatusFilter;
 }
 
-const TaskCard : React.FC<TaskCardProps> = ({task, type}) => {
+const TaskCard : React.FC<TaskCardProps> = React.memo(({task, type}) => {
 
     return(
         <>
@@ -25,6 +25,6 @@ const TaskCard : React.FC<TaskCardProps> = ({task, type}) => {
                 </div>
             </div>
         </>)
-    }
+    })
 
 export default TaskCard;

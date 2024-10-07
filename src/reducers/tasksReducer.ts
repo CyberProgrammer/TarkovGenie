@@ -20,6 +20,7 @@ import {undoCompletedTask} from "@helpers/undoCompletedTask.ts";
 
 const userLevel = 1;
 
+// All task data
 const fullTaskList = TaskList.data.tasks;
 
 
@@ -32,6 +33,7 @@ const taskData : TaskDataState = {
     active: currentActive,
     locked: currentLocked,
     completed: currentCompleted,
+    allTasks: fullTaskList
 }
 
 const initialTasksState : UserTasksState = {

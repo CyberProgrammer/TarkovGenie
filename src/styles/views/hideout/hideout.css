@@ -153,3 +153,11 @@
 .selected-btn{
 	border-bottom: 2px solid white !important;
 }
+
+.load-more {
+	text-align: center;
+	padding: 20px 0;
+	font-size: 16px;
+	color: #666;
+	/* Optional: Add a height or make sure it's visible on the page */
+}

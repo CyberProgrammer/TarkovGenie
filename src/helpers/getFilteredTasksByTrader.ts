@@ -8,7 +8,7 @@ export const getFilteredTasks = (
         completedTasks : Task[],
         lockedTasks : Task[],
         activeTasks : Task[],
-        traderID : number
+        traderID?: number | undefined,
 ) => {
     const taskMap = {
         [TaskStatusFilter.Active]: activeTasks,
@@ -16,8 +16,13 @@ export const getFilteredTasks = (
         [TaskStatusFilter.Locked]: lockedTasks
     };
 
-    const trader = TraderList.data.traders[traderID];
     const tasks = taskMap[statusFilter];
 
-    return tasks ? tasks.filter((task) => task.trader.id === trader.id) : [];
+    // If traderID is provided, filter by trader
+    if (traderID !== undefined) {
+        const trader = TraderList.data.traders[traderID];
+        return tasks ? tasks.filter((task) => task.trader.id === trader.id) : [];
+    }
+
+    return tasks ? tasks : [];
 }

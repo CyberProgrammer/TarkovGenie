@@ -1,17 +1,16 @@
 import React from "react";
 import {TaskStatusFilter} from "@customTypes/types.ts";
 import {changeStatusFilter} from "../../actions/userActions.ts";
-import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "@reducers/rootReducer.ts";
+import {useDispatch} from "react-redux";
 
 
 interface StatusFilterButtonProps{
     buttonText: string
     selectedValue: TaskStatusFilter
+    taskStatusFilter: TaskStatusFilter
 }
-const StatusFilterButton : React.FC<StatusFilterButtonProps> = ({buttonText, selectedValue}) => {
+const StatusFilterButton : React.FC<StatusFilterButtonProps> = ({buttonText, selectedValue, taskStatusFilter}) => {
     const dispatch = useDispatch();
-    const taskStatusFilter = useSelector((state: RootState) => state.tasks.statusFilter);
 
     return (
         <button
