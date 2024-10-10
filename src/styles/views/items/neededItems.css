@@ -61,10 +61,18 @@
 	height: 40px;
 	color: white;
 	border-radius: 5px;
-	background-color: #444444;
+	background-color: rgba(68, 68, 68, 0.6);
 	border: none;
 }
 
+.card-control-icon{
+	width: auto;
+	height: 100%;
+}
+
+.completed-card{
+	background: linear-gradient(180deg, rgba(28,43,23,1) 0%, rgba(18,66,1,1) 100%);
+}
 /*
 	Item background colors
  */

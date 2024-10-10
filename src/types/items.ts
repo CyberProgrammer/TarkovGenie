@@ -1,4 +1,5 @@
 export interface ItemNeeded{
+    id: string;
     taskName: string;
     item: string;
     types: string[];
@@ -6,4 +7,5 @@ export interface ItemNeeded{
     backgroundColor: string;
     wikiLink: string;
     count: number;
+    totalCount: number;
 }
