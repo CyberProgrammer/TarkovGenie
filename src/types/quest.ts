@@ -9,7 +9,7 @@ export interface Map {
     name: string;
 }
 
-export interface Item {
+export interface Key {
     id: string;
     name: string;
 }
@@ -29,28 +29,44 @@ export interface TraderRequirement {
     requirementType: string;
 }
 
-export interface TaskObjectiveQuestItem {
+export interface TaskObjectiveItem{
     id: string;
-    type: string;
-    description: string;
-    maps: Map[];
-    optional: boolean;
-    requiredKeys: Item[];
+    name: string;
+    types: string[];
+    image512pxLink: string;
+    backgroundColor: string;
+    wikiLink?: string;
+}
+
+export interface BuildWeaponObjective{
+    id: string;
+    name: string;
+    types: string[];
+    image512pxLink: string;
+    backgroundColor: string;
+    wikiLink?: string;
 }
 
 export interface TaskObjective {
     id: string;
     type: string;
     description: string;
+    count?: string;
     maps: Map[];
     optional: boolean;
+    requiredKeys?: Key[];
+    items?: TaskObjectiveItem[];
+    item?: BuildWeaponObjective;
+    foundInRaid?: boolean;
+    maxDurability?: number;
+    minDurability?: number;
 }
 
 export interface Task {
     id: string;
     name: string;
     trader: Trader;
-    objectives: (TaskObjective | TaskObjectiveQuestItem)[];
+    objectives: TaskObjective[];
     taskRequirements: TaskRequirement[];
     traderRequirements: TraderRequirement[];
     minPlayerLevel: number;

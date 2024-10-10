@@ -3,10 +3,12 @@ import '@styles/footer/footer.css';
 
 import { useSelector } from 'react-redux';
 import {useEffect, useState} from "react";
+import {useLocation} from "react-router-dom";
 
 const Footer = () => {
     const navState = useSelector((state:  RootState) => state.nav);
     const navVisible = navState.navVisible;
+    const location = useLocation();
 
     // Using card container height to position footer
     const [cardContainerHeight, setCardContainerHeight] = useState(0);
@@ -28,7 +30,7 @@ const Footer = () => {
         // Initial height calculation
         updateHeight();
 
-        // Set up a MutationObserver to observe changes in the container
+        // Observe changes in the container
         if (dom) {
             const observer = new MutationObserver(() => {
                 updateHeight(); // Recheck height when changes are observed
@@ -42,7 +44,7 @@ const Footer = () => {
             // Cleanup observer on component unmount
             return () => observer.disconnect();
         }
-    }, []);
+    }, [location.pathname]);
 
     return(
         <>

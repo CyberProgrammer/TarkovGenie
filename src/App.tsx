@@ -4,7 +4,7 @@ import '@styles/theme/colors.css'
 
 import Navigation from "@components/navigation/navigation.tsx";
 import Footer from '@components/footer/footer';
-import Dashboard from '@views/dashboard/dashboard';
+import DashboardView from '@views/dashboard/DashboardView.tsx';
 import ContentHeader from '@components/headers/content_header';
 
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
@@ -15,7 +15,9 @@ import {useSelector} from 'react-redux';
 import useWindowWidth from './hooks/useWindowWidth';
 import {useEffect, useRef } from 'react';
 import TasksView from '@views/tasks/TasksView';
-import Hideout from "@views/hideout/hideout.tsx";
+import HideoutView from "@views/hideout/HideoutView.tsx";
+import NeededItems from "@views/needed_items/NeededItemsView.tsx";
+import SettingsView from "@views/settings/SettingsView.tsx";
 
 function App() {
     const navState = useSelector((state: RootState) => state.nav);
@@ -31,6 +33,29 @@ function App() {
     // Apply full width to wrapper when the nav
     const shouldApplyFullWidth = navVisible && width >= 650;
 
+    const routes = [
+        {
+            path: "/",
+            element: <DashboardView/>
+        },
+        {
+            path: "/tasks",
+            element: <TasksView/>
+        },
+        {
+            path: "/hideout",
+            element: <HideoutView/>
+        },
+        {
+            path: "/needed-items",
+            element: <NeededItems/>
+        },
+        {
+            path: "/settings",
+            element: <SettingsView/>
+        },
+    ]
+
     return (
         <Router>
             <div id={"app"}>
@@ -39,9 +64,9 @@ function App() {
                     <div className={'view'}>
                         <ContentHeader/>
                         <Routes>
-                            <Route path="/" element={<Dashboard/>}/>
-                            <Route path="/tasks" element={<TasksView/>}/>
-                            <Route path="/hideout" element={<Hideout />}/>
+                            { routes.map(route => (
+                              <Route key={route.path} path={route.path} element={route.element}/>
+                            ))}
                         </Routes>
                         <Footer/>
                     </div>

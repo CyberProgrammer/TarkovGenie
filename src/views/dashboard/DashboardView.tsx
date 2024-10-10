@@ -5,7 +5,7 @@ import Scav from '@images/scav.png';
 import {useSelector} from "react-redux";
 import {RootState} from "@reducers/rootReducer.ts";
 
-const Dashboard = () => {
+const DashboardView = () => {
 
     const alert  = {
         title: 'Wipe Update',
@@ -53,31 +53,33 @@ const Dashboard = () => {
     return(
         <>
             <div className={'view-content'}>
-                <div className={'dashboard-introduction'}>
-                    <img className={'dashboard-introduction-image'} src={Scav} alt={'Scav'}/>
-                    <div className={'dashboard-introduction-wrapper'}>
-                        <h2>{alert.title}</h2>
-                        <div className={'dashboard-introduction-message'}>
-                            {alert.message}
+                <div id={'content-container'}>
+                    <div className={'dashboard-introduction'}>
+                        <img className={'dashboard-introduction-image'} src={Scav} alt={'Scav'}/>
+                        <div className={'dashboard-introduction-wrapper'}>
+                            <h2>{alert.title}</h2>
+                            <div className={'dashboard-introduction-message'}>
+                                {alert.message}
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div className={'dashboard-cards-wrapper'}>
-                    { cards.map((card, index) => {
-                        return (
-                            <DashboardCard
-                                key={index}
-                                title={card.title}
-                                stats={card.stats}
-                                tooltip={card.tooltip}
-                                className={card.className}
-                            />
-                        )
-                    })}
+                    <div className={'dashboard-cards-wrapper'}>
+                        {cards.map((card, index) => {
+                            return (
+                                <DashboardCard
+                                    key={index}
+                                    title={card.title}
+                                    stats={card.stats}
+                                    tooltip={card.tooltip}
+                                    className={card.className}
+                                />
+                            )
+                        })}
+                    </div>
                 </div>
             </div>
         </>
     )
 }
 
-export default Dashboard;
+export default DashboardView;
