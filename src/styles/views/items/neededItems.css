@@ -1,15 +1,71 @@
+@media screen and (max-width: 900px) {
+	#app .header-controls{
+		height: 100%;
+		flex-direction: column;
+	}
+
+	#app .filter-div, #app .search-div{
+		width: 100%;
+		padding: 0;
+		margin: 2% 0;
+	}
+}
+
 .header-controls{
 	display: flex;
 	justify-content: center;
-	height: 60px;
 	width: 100%;
+	height: 50px;
+	margin-bottom: 2%;
 	overflow-x: auto;
 	overflow-y: hidden;
 	scrollbar-width: thin;
+}
+
+.item-filter-btn{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100px;
+	height: 100%;
+	color: white;
+	text-align: center;
+	margin: 0 10px;
+	background-color: transparent;
+	border: none;
+}
+
+.filter-div{
+	display: flex;
+	justify-content: center;
+	width: 50%;
+	height: 50px;
+	background-color: var(--satin-soft-blue-color);
 	padding: 0 10px;
 	margin: auto auto 15px;
-	background-color: var(--satin-soft-blue-color);
 	border-radius: 10px;
+}
+
+.search-div{
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	width: 50%;
+	height: 100%;
+	padding: 0 0 0 10px;
+	margin: 0 0 0 1%;
+	border-radius: 10px;
+}
+
+.search-input{
+	width: 100%;
+	max-width: 900px;
+	height: 45px;
+	padding: 0 5%;
+	color: white;
+	border-radius: 5px;
+	background-color: #212121;
+	border: none;
 }
 
 .card-container{

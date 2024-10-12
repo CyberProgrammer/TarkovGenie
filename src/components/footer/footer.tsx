@@ -41,8 +41,18 @@ const Footer = () => {
                 childList: true,
             });
 
-            // Cleanup observer on component unmount
-            return () => observer.disconnect();
+            // Observe changes in size (e.g., when content size changes)
+            const resizeObserver = new ResizeObserver(() => {
+                updateHeight(); // Recheck height when the size of the element changes
+            });
+
+            resizeObserver.observe(dom);
+
+            // Cleanup observers on component unmount
+            return () => {
+                observer.disconnect();
+                resizeObserver.disconnect();
+            };
         }
     }, [location.pathname]);
 

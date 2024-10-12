@@ -21,6 +21,19 @@ const NeededItemsView = () => {
 
     const [neededItemList, setNeededItemList] = useState<TaskItemNeeded[]>(userTaskItemsNeeded);
     const [selectedFilter, setSelectedFilter] = useState('All');
+    const [searchQuery, setSearchQuery] = useState("");
+
+    // Handle search filter
+    useEffect(() => {
+        if(searchQuery != ""){
+            const filteredList = userTaskItemsNeeded.filter((obj) => obj.item.includes(searchQuery));
+            setNeededItemList(filteredList);
+        } else{
+            setNeededItemList(userTaskItemsNeeded);
+        }
+
+        console.log("Search: ", searchQuery);
+    }, [searchQuery]);
 
     // Lazy load more tasks on scroll
     useEffect(() => {
@@ -53,15 +66,20 @@ const NeededItemsView = () => {
     return(
         <div className={'view-content'}>
             <div className={'header-controls'}>
-                {['All', 'Tasks', 'Hideout'].map((filter) => (
-                    <button
-                        key={filter}
-                        className={`hideout-header-btn ${selectedFilter === filter ? 'selected-btn' : ''}`}
-                        onClick={() => setSelectedFilter(filter)}
-                    >
-                        {filter}
-                    </button>
-                ))}
+                <div className={'filter-div'}>
+                    {['All', 'Tasks', 'Hideout'].map((filter) => (
+                        <button
+                            key={filter}
+                            className={`item-filter-btn ${selectedFilter === filter ? 'selected-btn' : ''}`}
+                            onClick={() => setSelectedFilter(filter)}
+                        >
+                            {filter}
+                        </button>
+                    ))}
+                </div>
+                <div className={'search-div'}>
+                    <input className={'search-input'} type={"search"} placeholder={"Search by item"} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}/>
+                </div>
             </div>
             <div id={'content-container'}>
                 <div className={"card-container"}>
