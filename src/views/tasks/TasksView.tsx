@@ -10,7 +10,7 @@ import TasksHeader from "@components/headers/TasksHeader.tsx";
 
 const TasksView = () => {
     // Define state for lazy loading
-    const [visibleTasks, setVisibleTasks] = useState<number>(20); // Start with 10 tasks
+    const [visibleTasks, setVisibleTasks] = useState<number>(20);
     const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
     const taskStatusFilter = useSelector((state: RootState) => state.tasks.statusFilter);
@@ -72,7 +72,6 @@ const TasksView = () => {
                     ))}
                 </div>
 
-                {/* Loader for lazy loading */}
                 {visibleTasks < filteredTasksList.length && (
                     <div ref={loadMoreRef} className="load-more">
                         <p>Loading more tasks...</p>

@@ -6,21 +6,25 @@ import {
 } from "../actionTypes/actionTypes.ts";
 import {Task} from 'types/quest';
 
+// Navigation state
 export interface NavState{
     navVisible: boolean;
 }
 
+// User info state
 export interface UserState{
     userLevel: number;
     username: string;
 }
 
+// Task status state
 export enum TaskStatusFilter{
     Active = 0,
     Completed,
     Locked
 }
 
+// Task data state
 export interface TaskDataState{
     active: Task[];
     locked: Task[];
@@ -28,6 +32,7 @@ export interface TaskDataState{
     allTasks: Task[];
 }
 
+// User task state
 export interface UserTasksState{
     userTaskData: TaskDataState;
     tasksCompleted: number;
@@ -39,6 +44,7 @@ export interface UserTasksState{
     filterByTrader: boolean;
 }
 
+// Hideout state
 export interface HideoutState{
     hideoutItemsFoundCount: number;
     totalHideoutItemsCount: number;

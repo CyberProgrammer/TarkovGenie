@@ -51,10 +51,10 @@ export interface TaskObjective {
     id: string;
     type: string;
     description: string;
-    count?: string;
+    count?: number;
     maps: Map[];
     optional: boolean;
-    requiredKeys?: Key[];
+    requiredKeys?: Key[][] | null;
     items?: TaskObjectiveItem[];
     item?: BuildWeaponObjective;
     foundInRaid?: boolean;

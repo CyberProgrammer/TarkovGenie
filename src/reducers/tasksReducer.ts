@@ -21,8 +21,7 @@ import {undoCompletedTask} from "@helpers/undoCompletedTask.ts";
 const userLevel = 1;
 
 // All task data
-const fullTaskList = TaskList.data.tasks;
-
+const fullTaskList: Task[] = TaskList.data.tasks;
 
 // Just to test the different status filters
 const currentCompleted : Task[] = [];
