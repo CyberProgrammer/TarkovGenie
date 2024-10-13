@@ -10,6 +10,21 @@ export interface TaskItemNeeded{
     totalCount: number;
 }
 
+export interface HideoutItemNeeded{
+    id: string;
+    stationName: string;
+    level: number;
+    count: number;
+    totalCount: number;
+    item: HideoutItem;
+}
+
+export interface HideoutItem{
+    id: string;
+    name: string;
+    iconLink: string;
+}
+
 // Items needed state
 export interface ItemData{
     id: string;
@@ -20,4 +35,5 @@ export interface ItemData{
 export interface ItemsNeededState{
     allItemData: ItemData[];
     neededTaskItems: TaskItemNeeded[];
+    neededHideoutItems: HideoutItemNeeded[];
 }

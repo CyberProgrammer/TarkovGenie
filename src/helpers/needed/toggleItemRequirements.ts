@@ -1,6 +1,10 @@
-import {TaskItemNeeded} from "@customTypes/items.ts";
+import {HideoutItemNeeded, TaskItemNeeded} from "@customTypes/items.ts";
 
-export const toggleItemRequirements = (id: string, neededItemList: TaskItemNeeded[]) => {
+export const toggleItemRequirements = (
+    id: string,
+    neededItemList: (TaskItemNeeded | HideoutItemNeeded)[]):
+    (TaskItemNeeded | HideoutItemNeeded)[] => {
+
     const itemIndex = neededItemList.findIndex((item) => item.id === id);
     if(itemIndex !== -1){
         const currentCount = neededItemList[itemIndex].count;

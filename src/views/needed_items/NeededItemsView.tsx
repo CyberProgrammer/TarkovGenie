@@ -3,7 +3,7 @@ import {RootState} from "@reducers/rootReducer.ts";
 import {useSelector} from "react-redux";
 
 import "@styles/views/items/neededItems.css";
-import {TaskItemNeeded} from "@customTypes/items.ts";
+import {HideoutItemNeeded, TaskItemNeeded} from "@customTypes/items.ts";
 
 import PlusIcon from "@icons/needed_items/plus.svg";
 import MinusIcon from "@icons/needed_items/minus.svg";
@@ -18,32 +18,50 @@ const NeededItemsView = () => {
 
     const allItemData = useSelector((state: RootState) => state.itemsNeeded.allItemData);
     const userTaskItemsNeeded = useSelector((state: RootState) => state.itemsNeeded.neededTaskItems);
+    const userHideoutItemsNeeded = useSelector((state: RootState) => state.itemsNeeded.neededHideoutItems);
 
-    const [neededItemList, setNeededItemList] = useState<TaskItemNeeded[]>(userTaskItemsNeeded);
+    const [filteredTaskItems, setFilteredTaskItems] = useState<TaskItemNeeded[]>([]);
+    const [filteredHideoutItems, setFilteredHideoutItems] = useState<HideoutItemNeeded[]>([]);
+    const [neededItemList, setNeededItemList] = useState<(TaskItemNeeded | HideoutItemNeeded)[]>([]);
     const [selectedFilter, setSelectedFilter] = useState('All');
     const [searchQuery, setSearchQuery] = useState("");
 
-    // Handle search filter
+    // Filter and update lists for Tasks and Hideout separately
     useEffect(() => {
-        if(searchQuery != ""){
-            const filteredList = userTaskItemsNeeded.filter((obj) => obj.item.includes(searchQuery));
-            setNeededItemList(filteredList);
-        } else{
-            setNeededItemList(userTaskItemsNeeded);
-        }
+        const filterTasks = () => {
+            return searchQuery !== ""
+                ? userTaskItemsNeeded.filter((task) => task.item.includes(searchQuery))
+                : userTaskItemsNeeded;
+        };
 
-        console.log("Search: ", searchQuery);
-    }, [searchQuery]);
+        const filterHideouts = () => {
+            return searchQuery !== ""
+                ? userHideoutItemsNeeded.filter((hideout) => hideout.item.name.includes(searchQuery))
+                : userHideoutItemsNeeded;
+        };
+
+        setFilteredTaskItems(filterTasks());
+        setFilteredHideoutItems(filterHideouts());
+    }, [searchQuery, userTaskItemsNeeded, userHideoutItemsNeeded]);
+
+    // Combine lists based on the selected filter
+    useEffect(() => {
+        if (selectedFilter === 'All') {
+            setNeededItemList([...filteredTaskItems, ...filteredHideoutItems]);
+        } else if (selectedFilter === 'Tasks') {
+            setNeededItemList(filteredTaskItems);
+        } else if (selectedFilter === 'Hideout') {
+            setNeededItemList(filteredHideoutItems);
+        }
+    }, [selectedFilter, filteredTaskItems, filteredHideoutItems]);
 
     // Lazy load more tasks on scroll
     useEffect(() => {
         const currentLoadMoreRef = loadMoreRef.current;
 
         const observer = new IntersectionObserver((entries) => {
-            console.log("Entries...");
             if (entries[0].isIntersecting && visibleTasks < neededItemList.length) {
-                console.log("Intersecting...");
-                // When the user scrolls to the loadMoreRef element, load more tasks
+                // Load more tasks
                 setVisibleTasks((prevVisibleTasks) => Math.min(prevVisibleTasks + 20, neededItemList.length));
             }
         }, {
@@ -83,44 +101,64 @@ const NeededItemsView = () => {
             </div>
             <div id={'content-container'}>
                 <div className={"card-container"}>
-                    {neededItemList.slice(0, visibleTasks).map((taskItem, index) => (
+                    {neededItemList.slice(0, visibleTasks).map((item, index) => (
                         <div className={"card"} key={index}>
                             <div className={"card-header"}>
-                                {taskItem.types.includes("gun") ? (
-                                    // If the type includes 'gun', find and display the default gun item
+                                {"taskName" in item ? (
+                                    // TaskItemNeeded (type includes 'gun')
                                     (() => {
+                                        const taskItem = item as TaskItemNeeded;
                                         const defaultGunItem = findDefaultGunItem(taskItem, allItemData);
-
                                         return defaultGunItem ? (
                                             <img
                                                 className={`card-item-img ${"item-bg-" + taskItem.backgroundColor}`}
                                                 src={defaultGunItem.image512pxLink}
                                                 alt={defaultGunItem.name}
                                             />
-                                        ) : null;
+                                        ) : <img className={`card-item-img ${"item-bg-" + taskItem.backgroundColor}`}
+                                                 src={taskItem.image} alt={taskItem.item}/>;
                                     })()
                                 ) : (
-                                    // If the type does not include 'gun', display the task item image
-                                    <img className={`card-item-img ${"item-bg-" + taskItem.backgroundColor}`}
-                                         src={taskItem.image} alt={taskItem.item}/>
+                                    // HideoutItemNeeded
+                                    <img className={`card-item-img item-bg-default`}
+                                         src={(item as HideoutItemNeeded).item.iconLink}
+                                         alt={(item as HideoutItemNeeded).item.name}/>
                                 )}
                             </div>
-                            <div
-                                className={`card-content ${taskItem.count === taskItem.totalCount ? "completed-card" : ""}`}>
+                            <div className={`card-content ${(item.count === item.totalCount ? "completed-card" : "")}`}>
                                 <div className={"card-task-info"}>
-                                    <h3>
-                                        <a href={taskItem.wikiLink}>{taskItem.taskName}</a>
-                                    </h3>
-                                    <p>{taskItem.item}</p>
+                                    {"taskName" in item ? (
+                                        <h3>
+                                            <a href={(item as TaskItemNeeded).wikiLink}>{(item as TaskItemNeeded).taskName}</a>
+                                        </h3>
+                                    ) : (
+                                        <>
+                                            <h3>{item.stationName}</h3>
+                                            <h3>Level {(item as HideoutItemNeeded).level}</h3>
+                                        </>
+                                    )}
+                                    <p>
+                                        {"taskName" in item ? (item as TaskItemNeeded).item : (item as HideoutItemNeeded).item.name}
+                                    </p>
                                 </div>
                                 <div className={"card-controls"}>
-                                    <button onClick={() => setNeededItemList(decreaseCount(taskItem.id, neededItemList))} className={"card-control"}>
-                                        <img className={"card-control-icon"} src={MinusIcon} alt={"Decrease"}/>
+                                    <button
+                                        onClick={() => setNeededItemList(decreaseCount(item.id, neededItemList))}
+                                        className={"card-control"}
+                                    >
+                                        <img className={"card-control-icon"} src={MinusIcon} alt={"Decrease"} />
                                     </button>
-                                    <button onClick={() => setNeededItemList(toggleItemRequirements(taskItem.id, neededItemList))}
-                                            className={"card-control"}>{`${taskItem.count}/${taskItem.totalCount}`}</button>
-                                    <button onClick={() => setNeededItemList(increaseCount(taskItem.id, neededItemList))} className={"card-control"}>
-                                        <img className={"card-control-icon"} src={PlusIcon} alt={"Increase"}/>
+                                    <button
+                                        onClick={() => setNeededItemList(toggleItemRequirements(item.id, neededItemList))}
+                                        className={"card-control"}
+                                    >
+                                        {`${item.count}/${item.totalCount}`}
+                                    </button>
+                                    <button
+                                        onClick={() => setNeededItemList(increaseCount(item.id, neededItemList))}
+                                        className={"card-control"}
+                                    >
+                                        <img className={"card-control-icon"} src={PlusIcon} alt={"Increase"} />
                                     </button>
                                 </div>
                             </div>

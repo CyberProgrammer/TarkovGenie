@@ -1,17 +1,23 @@
 import {ReducerActionString} from "@customTypes/types.ts";
 import AllItemData from '@data/items.json';
-import {TaskItemNeeded, ItemsNeededState} from "@customTypes/items.ts";
+import {TaskItemNeeded, ItemsNeededState, HideoutItemNeeded} from "@customTypes/items.ts";
 import {Task} from "@customTypes/quest.ts";
+
 import TaskList from "@data/tasks.json";
+import HideoutData from "@data/hideout.json";
+
+import {HideoutStation} from "@customTypes/hideout.ts";
 
 const allTaskData: Task[] = TaskList.data.tasks;
+const allHideoutData = HideoutData.data.hideoutStations;
 
 const initialItemState : ItemsNeededState = {
     allItemData: AllItemData.data.items,
-    neededTaskItems: generateUserNeededItems(allTaskData)
+    neededTaskItems: generateNeededTaskItems(allTaskData),
+    neededHideoutItems: generateNeededHideoutItems(allHideoutData),
 }
 
-function generateUserNeededItems(allTaskData: Task[]): TaskItemNeeded[] {
+function generateNeededTaskItems(allTaskData: Task[]): TaskItemNeeded[] {
     const itemsToFind: TaskItemNeeded[] = [];
 
     allTaskData.forEach((task) => {
@@ -67,6 +73,29 @@ function generateUserNeededItems(allTaskData: Task[]): TaskItemNeeded[] {
 
     return itemsToFind;
 }
+
+function generateNeededHideoutItems(allHideoutData: HideoutStation[]){
+    const itemsToFind: HideoutItemNeeded[] = [];
+
+    allHideoutData.map((station) => {
+        if(station && station.levels){
+            station.levels.map((level) =>
+                level.itemRequirements.map((requirement) => {
+                    itemsToFind.push({
+                        id: requirement.id,
+                        stationName: station.name ?? 'Unknown Station',
+                        level: level.level,
+                        count: Number(0),
+                        totalCount: Number(requirement.count),
+                        item: requirement.item,
+                    })
+                }))
+        }
+    })
+
+    return itemsToFind;
+}
+
 
 const itemsReducer = (state: ItemsNeededState = initialItemState, action: ReducerActionString) => {
     switch (action.type){
