@@ -1,3 +1,9 @@
+import {
+    DECREASE_FOUND_ITEM_COUNT,
+    INCREASE_FOUND_ITEM_COUNT,
+    TOGGLE_COMPLETION_STATUS
+} from "../actionTypes/actionTypes.ts";
+
 export interface TaskItemNeeded{
     id: string;
     taskName: string;
@@ -25,7 +31,6 @@ export interface HideoutItem{
     iconLink: string;
 }
 
-// Items needed state
 export interface ItemData{
     id: string;
     name: string;
@@ -37,3 +42,26 @@ export interface ItemsNeededState{
     neededTaskItems: TaskItemNeeded[];
     neededHideoutItems: HideoutItemNeeded[];
 }
+
+/* Reducer */
+interface UpdateItemCountPayload {
+    itemID: string;
+    isTaskItem: boolean;
+}
+
+interface IncreaseItemCountAction {
+    type: typeof INCREASE_FOUND_ITEM_COUNT;
+    payload: UpdateItemCountPayload;
+}
+
+interface DecreaseItemCountAction {
+    type: typeof DECREASE_FOUND_ITEM_COUNT;
+    payload: UpdateItemCountPayload;
+}
+
+interface ToggleCompletionAction {
+    type: typeof TOGGLE_COMPLETION_STATUS;
+    payload: UpdateItemCountPayload;
+}
+
+export type ItemActions = IncreaseItemCountAction | DecreaseItemCountAction | ToggleCompletionAction;

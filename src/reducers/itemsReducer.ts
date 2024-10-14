@@ -1,12 +1,16 @@
-import {ReducerActionString} from "@customTypes/types.ts";
 import AllItemData from '@data/items.json';
-import {TaskItemNeeded, ItemsNeededState, HideoutItemNeeded} from "@customTypes/items.ts";
+import {TaskItemNeeded, ItemsNeededState, HideoutItemNeeded, ItemActions} from "@customTypes/items.ts";
 import {Task} from "@customTypes/quest.ts";
 
 import TaskList from "@data/tasks.json";
 import HideoutData from "@data/hideout.json";
 
 import {HideoutStation} from "@customTypes/hideout.ts";
+import {
+    DECREASE_FOUND_ITEM_COUNT,
+    INCREASE_FOUND_ITEM_COUNT,
+    TOGGLE_COMPLETION_STATUS
+} from "../actionTypes/actionTypes.ts";
 
 const allTaskData: Task[] = TaskList.data.tasks;
 const allHideoutData = HideoutData.data.hideoutStations;
@@ -96,10 +100,57 @@ function generateNeededHideoutItems(allHideoutData: HideoutStation[]){
     return itemsToFind;
 }
 
-
-const itemsReducer = (state: ItemsNeededState = initialItemState, action: ReducerActionString) => {
+const itemsReducer = (state: ItemsNeededState = initialItemState, action: ItemActions) => {
     switch (action.type){
+        case INCREASE_FOUND_ITEM_COUNT:{
+            const { itemID, isTaskItem } = action.payload;
+            const itemsList = isTaskItem ? state.neededTaskItems : state.neededHideoutItems;
 
+            return {
+                ...state,
+                [isTaskItem ? 'neededTaskItems' : 'neededHideoutItems']: itemsList.map(item => {
+                    if(item.id === itemID){
+                        const newCount = Math.min(item.count + 1, item.totalCount);
+                        return { ...item, count: newCount };
+                    }
+                    return item;
+                }),
+            }
+        }
+        case DECREASE_FOUND_ITEM_COUNT:{
+            const { itemID, isTaskItem } = action.payload;
+            const itemsList = isTaskItem ? state.neededTaskItems : state.neededHideoutItems;
+
+            return {
+                ...state,
+                [isTaskItem ? 'neededTaskItems' : 'neededHideoutItems']: itemsList.map(item => {
+                    if (item.id === itemID) {
+                        // Prevent count from going below 0
+                        const newCount = Math.max(item.count - 1, 0);
+                        return { ...item, count: newCount };
+                    }
+                    return item;
+                }),
+            };
+        }
+        case TOGGLE_COMPLETION_STATUS:{
+            const { itemID, isTaskItem } = action.payload;
+            const itemsList = isTaskItem ? state.neededTaskItems : state.neededHideoutItems;
+
+            return {
+                ...state,
+                [isTaskItem ? 'neededTaskItems' : 'neededHideoutItems']: itemsList.map(item => {
+                    if (item.id === itemID) {
+                        // Check if count requirement is met already
+                        if(item.count === item.totalCount){
+                            return {...item, count: 0};
+                        }
+                        return {...item, count: item.totalCount};
+                    }
+                    return item;
+                }),
+            }
+        }
         default:
             return state;
     }
