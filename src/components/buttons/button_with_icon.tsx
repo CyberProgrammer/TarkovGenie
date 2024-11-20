@@ -8,6 +8,8 @@ import {useDispatch} from "react-redux";
 import {Task} from "@customTypes/quest.ts";
 import {TaskStatusFilter} from "@customTypes/types.ts";
 import {handleCompletedTask, handleUndoTask} from "../../actions/taskActions.ts";
+import {generateNeededTaskItems} from "@reducers/itemsReducer.ts";
+import {completeItemsFromTask} from "../../actions/itemsActions.ts";
 
 interface ButtonWithIconProps {
     task: Task;
@@ -17,12 +19,20 @@ interface ButtonWithIconProps {
 const ButtonWithIcon : React.FC<ButtonWithIconProps> = ({task, type}) => {
     const dispatch = useDispatch();
 
+    // Handle button click logic
     const handleButtonClick = () => {
         // Check if task is defined and has an id
         if (task?.id && type == TaskStatusFilter.Active) {
+            // Gather items needed for task, then dispatch them to be completed
+            const neededFromTask = generateNeededTaskItems(Array(task));
+
+            dispatch(completeItemsFromTask(neededFromTask));
+
             dispatch(handleCompletedTask(task));
         } else if(task?.id && type == TaskStatusFilter.Completed){
             console.log("Unlocking task...");
+            //TODO Add the logic for undoing item completions from a task
+            
             dispatch(handleUndoTask(task));
         }
     }

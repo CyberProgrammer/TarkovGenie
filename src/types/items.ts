@@ -1,4 +1,5 @@
 import {
+    COMPLETE_ITEMS_FROM_TASK,
     DECREASE_FOUND_ITEM_COUNT,
     INCREASE_FOUND_ITEM_COUNT,
     TOGGLE_COMPLETION_STATUS
@@ -40,7 +41,11 @@ export interface ItemData{
 export interface ItemsNeededState{
     allItemData: ItemData[];
     neededTaskItems: TaskItemNeeded[];
+    taskItemCount: number;
+    taskItemTotalCount: number;
     neededHideoutItems: HideoutItemNeeded[];
+    hideoutItemCount: number;
+    hideoutItemTotalCount: number;
 }
 
 /* Reducer */
@@ -64,4 +69,9 @@ interface ToggleCompletionAction {
     payload: UpdateItemCountPayload;
 }
 
-export type ItemActions = IncreaseItemCountAction | DecreaseItemCountAction | ToggleCompletionAction;
+interface CompleteItemsFromTask{
+    type: typeof COMPLETE_ITEMS_FROM_TASK;
+    payload: TaskItemNeeded[]
+}
+
+export type ItemActions = CompleteItemsFromTask | IncreaseItemCountAction | DecreaseItemCountAction | ToggleCompletionAction;

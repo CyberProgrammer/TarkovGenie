@@ -21,15 +21,16 @@ const DashboardView = () => {
     const tasksCompletedCount = useSelector((state: RootState) => state.tasks.tasksCompleted);
     // Tasks total count
     const totalTaskCount = useSelector((state: RootState) => state.tasks.tasksCount);
+
     // Task items found
-    const taskItemsFound = useSelector((state: RootState) => state.tasks.taskItemsFound);
+    const taskItemsFound = useSelector((state: RootState) => state.itemsNeeded.taskItemCount);
     // Total items to be found
-    const totalTaskItems = useSelector((state: RootState) => state.tasks.totalTaskItems);
+    const totalTaskItems = useSelector((state: RootState) => state.itemsNeeded.taskItemTotalCount);
 
     // Hideout items found
-    const hideoutItemsFound = useSelector((state: RootState) => state.hideout.hideoutItemsFound);
+    const hideoutItemsFound = useSelector((state: RootState) => state.itemsNeeded.hideoutItemCount);
     // Hideout items total
-    const totalHideoutItems = useSelector((state: RootState) => state.hideout.totalHideoutItemsCount);
+    const totalHideoutItems = useSelector((state: RootState) => state.itemsNeeded.hideoutItemTotalCount);
 
     const cards =
         [{

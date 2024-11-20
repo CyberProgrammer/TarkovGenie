@@ -1,7 +1,6 @@
 
 import {
-    ADD_COMPLETED_TASK,
-    UNDO_LOCKED_TASK,
+    ADD_COMPLETED_TASK, UNDO_COMPLETED_TASK,
     UPDATE_ACTIVE_TASKS, UPDATE_COMPLETED_TASKS,
     UPDATE_LOCKED_TASKS
 } from '../actionTypes/actionTypes.ts'
@@ -38,9 +37,9 @@ const handleCompletedTask = (task : Task) => {
 }
 
 // Undo Completed Task
-const handleUndoTask = (task : Task) => {
+const handleUndoTask = (task: Task) => {
     return {
-        type: UNDO_LOCKED_TASK,
+        type: UNDO_COMPLETED_TASK,
         payload: task,
     }
 }

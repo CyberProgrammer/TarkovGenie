@@ -2,10 +2,7 @@ import {
     ADD_COMPLETED_TASK,
     CHANGE_FILTER_BY, CHANGE_STATUS_FILTER,
     CHANGE_TRADER_FILTER,
-    DECREASE_TASK_ITEMS_FOUND,
-    DECREASE_TASKS_COMPLETED,
-    INCREASE_TASK_ITEMS_FOUND,
-    INCREASE_TASKS_COMPLETED, UNDO_LOCKED_TASK,
+    UNDO_COMPLETED_TASK,
     UPDATE_ACTIVE_TASKS, UPDATE_COMPLETED_TASKS,
     UPDATE_LOCKED_TASKS
 } from '../actionTypes/actionTypes.js';
@@ -39,8 +36,6 @@ const initialTasksState : UserTasksState = {
     userTaskData: taskData,
     tasksCompleted: 0,
     tasksCount: fullTaskList.length,
-    taskItemsFound:  0,
-    totalTaskItems: 924,
     traderFilter: 0,
     statusFilter: TaskStatusFilter.Active,
     filterByTrader: false
@@ -48,26 +43,6 @@ const initialTasksState : UserTasksState = {
 
 const tasksReducer = (state = initialTasksState, action: ReducerActions) => {
     switch (action.type) {
-        case INCREASE_TASKS_COMPLETED:
-            return {
-                ...state,
-                tasksCompleted: state.tasksCompleted + 1,
-            };
-        case DECREASE_TASKS_COMPLETED:
-            return {
-                ...state,
-                tasksCompleted: state.tasksCompleted - 1,
-            };
-        case INCREASE_TASK_ITEMS_FOUND:
-            return {
-                ...state,
-                taskItemsFound: state.taskItemsFound + 1,
-            };
-        case DECREASE_TASK_ITEMS_FOUND:
-            return {
-                ...state,
-                taskItemsFound: state.taskItemsFound - 1,
-            };
         case CHANGE_TRADER_FILTER:
             return {
                 ...state,
@@ -108,13 +83,19 @@ const tasksReducer = (state = initialTasksState, action: ReducerActions) => {
                 }
             }
             return state;
-        case UNDO_LOCKED_TASK:
+        case UNDO_COMPLETED_TASK:
             if (action.payload && typeof action.payload === 'object'){
+                const updatedCompletedList = undoCompletedTask(state.userTaskData.completed, action.payload, TaskList.data.tasks);
+
+                // Calculate the number of tasks that were undone
+                const tasksUndoneCount = state.userTaskData.completed.length - updatedCompletedList.length;
+
                 return {
                     ...state,
+                    tasksCompleted: state.tasksCompleted - tasksUndoneCount,
                     userTaskData: {
                         ...state.userTaskData,
-                        completed: undoCompletedTask(state.userTaskData.completed, action.payload, TaskList.data.tasks),
+                        completed: updatedCompletedList,
                         active: getCurrentActive(fullTaskList, state.userTaskData.completed, userLevel),
                         locked: getCurrentLocked(fullTaskList, state.userTaskData.completed, state.userTaskData.active),
                     }

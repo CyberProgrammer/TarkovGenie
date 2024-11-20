@@ -25,7 +25,7 @@ const NeededItemsView = () => {
 
     const filteredTaskItems = useMemo(() => {
         return searchQuery !== ""
-            ? userTaskItemsNeeded.filter((task) => task.item.includes(searchQuery))
+            ? userTaskItemsNeeded.filter((task) => task && task.item.includes(searchQuery))
             : userTaskItemsNeeded;
     }, [searchQuery, userTaskItemsNeeded]);
 
@@ -110,69 +110,97 @@ const NeededItemsView = () => {
             </div>
             <div id={'content-container'}>
                 <div className={"card-container"}>
-                    {neededItemList && neededItemList.slice(0, visibleTasks).map((item, index) => (
-                        <div className={"card"} key={index}>
-                            <div className={"card-header"}>
-                                {"taskName" in item ? (
-                                    // TaskItemNeeded (type includes 'gun')
-                                    (() => {
-                                        const taskItem = item as TaskItemNeeded;
-                                        const defaultGunItem = findDefaultGunItem(taskItem, allItemData);
-                                        return defaultGunItem ? (
-                                            <img
-                                                className={`card-item-img ${"item-bg-" + taskItem.backgroundColor}`}
-                                                src={defaultGunItem.image512pxLink}
-                                                alt={defaultGunItem.name}
-                                            />
-                                        ) : <img className={`card-item-img ${"item-bg-" + taskItem.backgroundColor}`}
-                                                 src={taskItem.image} alt={taskItem.item}/>;
-                                    })()
-                                ) : (
-                                    // HideoutItemNeeded
-                                    <img className={`card-item-img item-bg-default`}
-                                         src={(item as HideoutItemNeeded).item.iconLink}
-                                         alt={(item as HideoutItemNeeded).item.name}/>
-                                )}
-                            </div>
-                            <div className={`card-content ${(item.count === item.totalCount ? "completed-card" : "")}`}>
-                                <div className={"card-task-info"}>
-                                    {"taskName" in item ? (
-                                        <h3>
-                                            <a href={(item as TaskItemNeeded).wikiLink}>{(item as TaskItemNeeded).taskName}</a>
-                                        </h3>
+                    {neededItemList && neededItemList.slice(0, visibleTasks).map((item, index) => {
+                        if(!item){
+                            return null;
+                        }
+                        // Confirm that the item exists and contains necessary fields
+                        const isTaskItem = "taskName" in item;
+                        const taskItem = isTaskItem ? item as TaskItemNeeded : null;
+                        const hideoutItem = !isTaskItem ? item as HideoutItemNeeded : null;
+
+                        const isItemCompleted = item.count === item.totalCount;
+                        const taskItemImage = taskItem ? taskItem.image : hideoutItem?.item.iconLink;
+
+                        if (!taskItemImage || !taskItem) {
+                            // Return null or a fallback element if the item is invalid or missing key fields
+                            return null;
+                        }
+
+                        return (
+                            <div className={"card"} key={index}>
+                                <div className={"card-header"}>
+                                    {isTaskItem ? (
+                                        // TaskItemNeeded (type includes 'gun')
+                                        (() => {
+                                            const defaultGunItem = findDefaultGunItem(taskItem as TaskItemNeeded, allItemData);
+                                            return defaultGunItem ? (
+                                                <img
+                                                    className={`card-item-img ${"item-bg-" + taskItem.backgroundColor}`}
+                                                    src={defaultGunItem.image512pxLink}
+                                                    alt={defaultGunItem.name}
+                                                />
+                                            ) : (
+                                                <img
+                                                    className={`card-item-img ${"item-bg-" + taskItem.backgroundColor}`}
+                                                    src={taskItem.image}
+                                                    alt={taskItem.item}
+                                                />
+                                            );
+                                        })()
                                     ) : (
-                                        <>
-                                            <h3>{item.stationName}</h3>
-                                            <h3>Level {(item as HideoutItemNeeded).level}</h3>
-                                        </>
+                                        // HideoutItemNeeded
+                                        <img
+                                            className={`card-item-img item-bg-default`}
+                                            src={hideoutItem?.item.iconLink}
+                                            alt={hideoutItem?.item.name}
+                                        />
                                     )}
-                                    <p>
-                                        {"taskName" in item ? (item as TaskItemNeeded).item : (item as HideoutItemNeeded).item.name}
-                                    </p>
                                 </div>
-                                <div className={"card-controls"}>
-                                    <button
-                                        onClick={() => handleUpdateCount(item, 'decrease')}
-                                        className={"card-control"}
-                                    >
-                                        <img className={"card-control-icon"} src={MinusIcon} alt={"Decrease"} />
-                                    </button>
-                                    <button
-                                        onClick={() => handleUpdateCount(item, 'toggle')}
-                                        className={"card-control"}
-                                    >
-                                        {`${item.count}/${item.totalCount}`}
-                                    </button>
-                                    <button
-                                        onClick={() => handleUpdateCount(item, 'increase')}
-                                        className={"card-control"}
-                                    >
-                                        <img className={"card-control-icon"} src={PlusIcon} alt={"Increase"} />
-                                    </button>
+
+                                {/* Card content with completed-card class if item is completed */}
+                                <div className={`card-content ${isItemCompleted ? "completed-card" : ""}`}>
+                                    <div className={"card-task-info"}>
+                                        {isTaskItem ? (
+                                            <h3>
+                                                <a href={taskItem?.wikiLink}>{taskItem?.taskName}</a>
+                                            </h3>
+                                        ) : (
+                                            <>
+                                                <h3>{hideoutItem?.stationName}</h3>
+                                                <h3>Level {hideoutItem?.level}</h3>
+                                            </>
+                                        )}
+                                        <p>
+                                            {isTaskItem ? taskItem?.item : hideoutItem?.item.name}
+                                        </p>
+                                    </div>
+
+                                    {/* Controls to adjust item counts */}
+                                    <div className={"card-controls"}>
+                                        <button
+                                            onClick={() => handleUpdateCount(item, 'decrease')}
+                                            className={"card-control"}
+                                        >
+                                            <img className={"card-control-icon"} src={MinusIcon} alt={"Decrease"} />
+                                        </button>
+                                        <button
+                                            onClick={() => handleUpdateCount(item, 'toggle')}
+                                            className={"card-control"}
+                                        >
+                                            {`${item.count}/${item.totalCount}`}
+                                        </button>
+                                        <button
+                                            onClick={() => handleUpdateCount(item, 'increase')}
+                                            className={"card-control"}
+                                        >
+                                            <img className={"card-control-icon"} src={PlusIcon} alt={"Increase"} />
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
 
                     {neededItemList && visibleTasks < neededItemList.length && (
                         <div ref={loadMoreRef} className="load-more">

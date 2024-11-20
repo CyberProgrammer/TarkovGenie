@@ -1,7 +1,7 @@
 import {
-    ADD_COMPLETED_TASK,
-    UNDO_LOCKED_TASK,
-    UPDATE_ACTIVE_TASKS, UPDATE_COMPLETED_TASKS,
+    ADD_COMPLETED_TASK, UNDO_COMPLETED_TASK,
+    UPDATE_ACTIVE_TASKS,
+    UPDATE_COMPLETED_TASKS,
     UPDATE_LOCKED_TASKS
 } from "../actionTypes/actionTypes.ts";
 import {Task} from 'types/quest';
@@ -37,8 +37,6 @@ export interface UserTasksState{
     userTaskData: TaskDataState;
     tasksCompleted: number;
     tasksCount: number;
-    taskItemsFound: number;
-    totalTaskItems: number;
     traderFilter: number;
     statusFilter: TaskStatusFilter;
     filterByTrader: boolean;
@@ -85,8 +83,8 @@ export interface updateCompletedTasksAction{
     payload: Task[];
 }
 
-export interface UndoLockedTaskAction {
-    type: typeof UNDO_LOCKED_TASK;
+export interface UndoCompletedTaskAction {
+    type: typeof UNDO_COMPLETED_TASK;
     payload: Task;
 }
 
@@ -95,7 +93,7 @@ export type ReducerActions =
     | ReducerActionString
     | ReducerActionBoolean
     | AddCompletedTaskAction
-    | UndoLockedTaskAction
+    | UndoCompletedTaskAction
     | updateCompletedTasksAction
     | updateLockedTasksAction
     | updateActiveTasksAction;
