@@ -13,6 +13,7 @@ import {decreaseFoundItemCount, increaseFoundItemCount, toggleCompletion} from "
 
 const NeededItemsView = () => {
     const dispatch = useDispatch();
+
     const [visibleTasks, setVisibleTasks] = useState<number>(15);
     const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
@@ -35,14 +36,19 @@ const NeededItemsView = () => {
             : userHideoutItemsNeeded;
     }, [searchQuery, userHideoutItemsNeeded]);
 
-    const neededItemList = useMemo(() => {
+    const neededItemList: (TaskItemNeeded | HideoutItemNeeded)[] = useMemo(() => {
         if (selectedFilter === 'All') {
+            console.log("All filter selected...");
             return [...filteredTaskItems, ...filteredHideoutItems];
         } else if (selectedFilter === 'Tasks') {
+            console.log("Tasks filter selected...");
             return filteredTaskItems;
         } else if (selectedFilter === 'Hideout') {
+            console.log("Hideout filter selected...");
             return filteredHideoutItems;
         }
+        // Default return value to avoid undefined
+        return [];
     }, [selectedFilter, filteredTaskItems, filteredHideoutItems]);
 
     // Lazy load more tasks on scroll
@@ -114,15 +120,18 @@ const NeededItemsView = () => {
                         if(!item){
                             return null;
                         }
+
                         // Confirm that the item exists and contains necessary fields
                         const isTaskItem = "taskName" in item;
+
                         const taskItem = isTaskItem ? item as TaskItemNeeded : null;
                         const hideoutItem = !isTaskItem ? item as HideoutItemNeeded : null;
 
-                        const isItemCompleted = item.count === item.totalCount;
-                        const taskItemImage = taskItem ? taskItem.image : hideoutItem?.item.iconLink;
+                        const itemImage = taskItem ? taskItem.image : hideoutItem?.item.iconLink;
 
-                        if (!taskItemImage || !taskItem) {
+                        const isItemCompleted = item.count === item.totalCount;
+
+                        if (!itemImage || !taskItem && !hideoutItem) {
                             // Return null or a fallback element if the item is invalid or missing key fields
                             return null;
                         }
@@ -133,6 +142,10 @@ const NeededItemsView = () => {
                                     {isTaskItem ? (
                                         // TaskItemNeeded (type includes 'gun')
                                         (() => {
+                                            if(!taskItem){
+                                                return null;
+                                            }
+
                                             const defaultGunItem = findDefaultGunItem(taskItem as TaskItemNeeded, allItemData);
                                             return defaultGunItem ? (
                                                 <img

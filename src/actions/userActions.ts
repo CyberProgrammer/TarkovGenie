@@ -5,10 +5,10 @@ import
     INCREASE_LEVEL,
     DECREASE_LEVEL,
     CHANGE_TRADER_FILTER,
-    CHANGE_FILTER_BY, CHANGE_STATUS_FILTER
+    CHANGE_FILTER_BY, CHANGE_STATUS_FILTER, LOAD_USER_DATA
 } from '../actionTypes/actionTypes';
 
-import {TaskStatusFilter} from "@customTypes/types.ts";
+import {TaskStatusFilter, UserState} from "@customTypes/types.ts";
 
 // Action is used to send to the reducer
 
@@ -59,6 +59,14 @@ const toggleFilterBy = (filter: boolean) => {
     }
 }
 
+// Load data
+const loadUserData  = (userData: UserState) => {
+    return{
+        type: LOAD_USER_DATA,
+        payload: userData
+    }
+}
+
 export
 {
     toggleNav,
@@ -68,4 +76,5 @@ export
     changeTraderFilter,
     changeStatusFilter,
     toggleFilterBy,
+    loadUserData
 };

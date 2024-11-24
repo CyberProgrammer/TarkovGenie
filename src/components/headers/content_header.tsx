@@ -35,10 +35,14 @@ const ContentHeader = () => {
     return(
         <>
             <div className={`view-header`}>
-                <button className={'view-header-button'} onClick={() => {dispatch(toggleNav())}}>
-                    <img className={'view-header-icon'} src={MenuIcon} alt={'icon'}/>
-                </button>
-                <h2 className={'view-header-text'}>{currentPath}</h2>
+                <div className={'view-header-info'}>
+                    <button className={'view-header-button'} onClick={() => {
+                        dispatch(toggleNav())
+                    }}>
+                        <img className={'view-header-icon'} src={MenuIcon} alt={'icon'}/>
+                    </button>
+                    <h2 className={'view-header-text'}>{currentPath}</h2>
+                </div>
             </div>
         </>
     )

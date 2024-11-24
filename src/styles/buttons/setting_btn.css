@@ -1,0 +1,17 @@
+.setting-btn{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 200px;
+	padding: 5px;
+	margin-right: 10px;
+	height: 40px;
+	color: white;
+	border-radius: 5px;
+	background-color: rgba(68, 68, 68, 0.6);
+	border: none;
+}
+
+.setting-btn:hover{
+	background-color: var(--accent-background);
+}

@@ -1,9 +1,12 @@
 import {
     INCREASE_FOUND_ITEM_COUNT,
     DECREASE_FOUND_ITEM_COUNT,
-    TOGGLE_COMPLETION_STATUS, COMPLETE_ITEMS_FROM_TASK
+    TOGGLE_COMPLETION_STATUS,
+    COMPLETE_ITEMS_FROM_TASK,
+    INCREASE_HIDEOUT_ITEM_COUNT, LOAD_ITEM_DATA
 } from "../actionTypes/actionTypes.ts";
-import {TaskItemNeeded} from "@customTypes/items.ts";
+import {ItemsNeededState, TaskItemNeeded} from "@customTypes/items.ts";
+import {HideoutStation} from "@customTypes/hideout.ts";
 
 const increaseFoundItemCount = (itemID: string, isTaskItem: boolean) => {
     return{
@@ -16,6 +19,13 @@ const decreaseFoundItemCount = (itemID: string, isTaskItem: boolean) => {
     return{
         type: DECREASE_FOUND_ITEM_COUNT,
         payload: {itemID, isTaskItem}
+    }
+}
+
+const increaseFoundHideoutItemCount = (station: HideoutStation, isTaskItem: boolean) => {
+    return{
+        type: INCREASE_HIDEOUT_ITEM_COUNT,
+        payload: {station, isTaskItem}
     }
 }
 
@@ -33,11 +43,19 @@ const completeItemsFromTask = (items : TaskItemNeeded[]) => {
     }
 }
 
+const loadItemsData = (itemsData: ItemsNeededState) => {
+    return{
+        type: LOAD_ITEM_DATA,
+        payload: itemsData
+    }
+}
 //TODO Add the logic for undoing item completions from a task
 
 export {
     increaseFoundItemCount,
     decreaseFoundItemCount,
     toggleCompletion,
-    completeItemsFromTask
+    completeItemsFromTask,
+    increaseFoundHideoutItemCount,
+    loadItemsData
 }

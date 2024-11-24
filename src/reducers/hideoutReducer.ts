@@ -1,18 +1,14 @@
-import { ReducerActionString } from 'types/types'
-import {DECREASE_HIDEOUT_LEVEL, INCREASE_HIDEOUT_LEVEL} from "../actionTypes/actionTypes.ts";
+import {DECREASE_HIDEOUT_LEVEL, INCREASE_HIDEOUT_LEVEL, LOAD_HIDEOUT_DATA} from "../actionTypes/actionTypes.ts";
 import HideoutData from "@data/hideout.json";
+import {HideoutActions, HideoutStation, HideoutUserData} from "@customTypes/hideout.ts";
 
-const totalItemsCount = HideoutData.data.hideoutStations.reduce((acc, station) => {
-    station.levels.forEach((level) => {
-        acc += level.itemRequirements.length;
-    });
-    return acc;
-}, 0);
+interface HideoutState {
+    stationData: HideoutStation[];
+    userStationData: HideoutUserData[];
+}
 
-const initialHideoutState = {
+const initialHideoutState: HideoutState = {
     stationData: HideoutData.data.hideoutStations,
-    hideoutItemsFound: 0,
-    totalHideoutItemsCount: totalItemsCount,
     userStationData: [
         {
             id: "5d388e97081959000a123acf",
@@ -173,8 +169,16 @@ const initialHideoutState = {
     ]
 };
 
-const hideoutReducer = (state = initialHideoutState, action: ReducerActionString) => {
+const hideoutReducer = (state = initialHideoutState, action: HideoutActions) => {
     switch (action.type) {
+        case LOAD_HIDEOUT_DATA: {
+            const hideoutData = action.payload;
+            console.log("TEST", hideoutData);
+            return{
+                ...state,
+                userStationData: hideoutData
+            };
+        }
         case INCREASE_HIDEOUT_LEVEL:
             return {
                 ...state,

@@ -31,8 +31,6 @@ const ButtonWithIcon : React.FC<ButtonWithIconProps> = ({task, type}) => {
             dispatch(handleCompletedTask(task));
         } else if(task?.id && type == TaskStatusFilter.Completed){
             console.log("Unlocking task...");
-            //TODO Add the logic for undoing item completions from a task
-            
             dispatch(handleUndoTask(task));
         }
     }

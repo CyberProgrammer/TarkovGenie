@@ -1,3 +1,5 @@
+import {LOAD_HIDEOUT_DATA} from "../actionTypes/actionTypes.ts";
+
 export interface UserStationData {
     id: string;
     name: string;
@@ -59,3 +61,24 @@ export interface Trader {
     id: string;
     name: string;
 }
+
+export interface HideoutUserData {
+    id: string;
+    name: string;
+    level: number;
+    imageLink: string;
+}
+
+export interface ReducerActionString{
+    type:string;
+    payload?: string;
+}
+
+export interface HideoutDataAction{
+    type: typeof LOAD_HIDEOUT_DATA,
+    payload: HideoutUserData[]
+}
+
+export type HideoutActions =
+    ReducerActionString
+    | HideoutDataAction
