@@ -35,7 +35,6 @@ const TradersList = () => {
     };
 
     const handleTraderFilterChange = (id: number) => {
-        console.log("ID: ", id);
         dispatch(changeTraderFilter(id))
     }
 

@@ -1,5 +1,5 @@
 import AllItemData from '@data/items.json';
-import {TaskItemNeeded, ItemsNeededState, HideoutItemNeeded, ItemActions} from "@customTypes/items.ts";
+import {HideoutItemNeeded, ItemActions, ItemsNeededState, TaskItemNeeded} from "@customTypes/items.ts";
 import {Task} from "@customTypes/quest.ts";
 
 import TaskList from "@data/tasks.json";
@@ -10,6 +10,8 @@ import {
     COMPLETE_ITEMS_FROM_TASK,
     DECREASE_FOUND_ITEM_COUNT,
     INCREASE_FOUND_ITEM_COUNT,
+    INCREASE_HIDEOUT_ITEM_COUNT,
+    LOAD_ITEM_DATA,
     TOGGLE_COMPLETION_STATUS
 } from "../actionTypes/actionTypes.ts";
 
@@ -18,6 +20,7 @@ const allHideoutData = HideoutData.data.hideoutStations;
 
 const taskItemsNeeded = generateNeededTaskItems(allTaskData);
 const hideoutItemsNeeded = generateNeededHideoutItems(allHideoutData);
+console.log("HideoutItemsNeeded: ", hideoutItemsNeeded);
 
 const isCurrencyItem = ["Euros", "Dollars", "Roubles"]
 const taskItemsNeededCount: number = taskItemsNeeded.reduce((acc, taskItem) => {
@@ -122,6 +125,75 @@ function generateNeededHideoutItems(allHideoutData: HideoutStation[]){
 
 const itemsReducer = (state: ItemsNeededState = initialItemState, action: ItemActions) => {
     switch (action.type){
+        case LOAD_ITEM_DATA:{
+            const {taskItemTotalCount, taskItemCount, hideoutItemTotalCount, neededHideoutItems, allItemData, neededTaskItems, hideoutItemCount} = action.payload;
+            return{
+                ...state,
+                allItemData: allItemData,
+                taskItemCount: taskItemCount,
+                taskItemTotalCount: taskItemTotalCount,
+                neededTaskItems: neededTaskItems,
+                neededHideoutItems: neededHideoutItems,
+                hideoutItemCount: hideoutItemCount,
+                hideoutItemTotalCount: hideoutItemTotalCount,
+            };
+        }
+        case INCREASE_HIDEOUT_ITEM_COUNT: {
+            const { station, isTaskItem } = action.payload;
+
+            // If task item do nothing
+            if(isTaskItem){
+                return state;
+            }
+
+            const currentStationData = state.neededHideoutItems.filter(
+                (item) => item.stationName == station.name && item.level == station.level+1);
+
+            // Check if current station data is found
+            if(!currentStationData){
+                return state;
+            }
+
+            // If any of the requirements are not counted for, add the count
+            let countToAdd = 0;
+            currentStationData.map((item) => {
+                if(item.count != item.totalCount){
+                    // Check if item is currency
+                    const isCurrencyItem = ["Euros", "Dollars", "Roubles"]
+                        .includes(item.item.name);
+
+                    if(isCurrencyItem)
+                        countToAdd += 1;
+                    else
+                        countToAdd += item.totalCount;
+
+                    item.count = item.totalCount;
+                }
+            })
+
+            console.log("Needed items: ", state.neededHideoutItems);
+            console.log("Current Station Data: ", currentStationData);
+            const updatedHideoutItems = state.neededHideoutItems.map((item) => {
+                // Check if there's a matching entry in currentStationData
+                const matchingItem = currentStationData.find((req) => req.id === item.id);
+                return matchingItem ? matchingItem : item;
+            })
+
+            if(countToAdd > 0){
+                return {
+                    ...state,
+                    neededHideoutItems: updatedHideoutItems,
+                    hideoutItemCount: state.hideoutItemCount + countToAdd
+                }
+            }
+
+
+            // console.log("New count to add: ", countToAdd);
+            // console.log("Current Station Data: ", currentStationData);
+            // console.log("Station: ", station);
+            // console.log("Is task item? ", isTaskItem);
+            return state;
+        }
         case INCREASE_FOUND_ITEM_COUNT:{
             const { itemID, isTaskItem } = action.payload;
             const itemsList = isTaskItem ? state.neededTaskItems : state.neededHideoutItems;

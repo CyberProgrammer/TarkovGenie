@@ -2,8 +2,11 @@ import {
     COMPLETE_ITEMS_FROM_TASK,
     DECREASE_FOUND_ITEM_COUNT,
     INCREASE_FOUND_ITEM_COUNT,
+    INCREASE_HIDEOUT_ITEM_COUNT, LOAD_ITEM_DATA,
     TOGGLE_COMPLETION_STATUS
 } from "../actionTypes/actionTypes.ts";
+
+import {HideoutUserData} from "@customTypes/hideout.ts";
 
 export interface TaskItemNeeded{
     id: string;
@@ -54,6 +57,11 @@ interface UpdateItemCountPayload {
     isTaskItem: boolean;
 }
 
+interface UpdateHideoutCountPayload{
+    station: HideoutUserData;
+    isTaskItem: boolean;
+}
+
 interface IncreaseItemCountAction {
     type: typeof INCREASE_FOUND_ITEM_COUNT;
     payload: UpdateItemCountPayload;
@@ -62,6 +70,11 @@ interface IncreaseItemCountAction {
 interface DecreaseItemCountAction {
     type: typeof DECREASE_FOUND_ITEM_COUNT;
     payload: UpdateItemCountPayload;
+}
+
+interface IncreaseHideoutItemCountAction{
+    type: typeof INCREASE_HIDEOUT_ITEM_COUNT;
+    payload: UpdateHideoutCountPayload
 }
 
 interface ToggleCompletionAction {
@@ -74,4 +87,15 @@ interface CompleteItemsFromTask{
     payload: TaskItemNeeded[]
 }
 
-export type ItemActions = CompleteItemsFromTask | IncreaseItemCountAction | DecreaseItemCountAction | ToggleCompletionAction;
+interface ItemsDataAction{
+    type: typeof LOAD_ITEM_DATA;
+    payload: ItemsNeededState
+}
+
+
+export type ItemActions = CompleteItemsFromTask |
+    IncreaseItemCountAction |
+    DecreaseItemCountAction |
+    IncreaseHideoutItemCountAction |
+    ToggleCompletionAction |
+    ItemsDataAction;

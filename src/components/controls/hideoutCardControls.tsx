@@ -1,6 +1,7 @@
 import { HideoutStation, UserStationData } from "@customTypes/hideout";
 import { useDispatch } from "react-redux";
 import { decreaseHideoutLevel, increaseHideoutLevel } from "../../actions/hideoutActions";
+import {increaseFoundHideoutItemCount} from "../../actions/itemsActions.ts";
 
 interface HideoutCardControlsProps {
     station: UserStationData;
@@ -13,8 +14,21 @@ interface HideoutCardControlsProps {
 const HideoutCardControls = ({ station, isStationUpgradable, lockedStations, stationData, userStations}: HideoutCardControlsProps) => {
     const dispatch = useDispatch();
 
-    const handleUpgrade = () => dispatch(increaseHideoutLevel(station.id));
-    const handleDowngrade = () => dispatch(decreaseHideoutLevel(station.id));
+    const handleUpgrade = () => {
+        const isTaskItem = false;
+
+        // Increase hideout items found
+        dispatch(increaseFoundHideoutItemCount(station, isTaskItem));
+
+        // Increase hideout level
+        dispatch(increaseHideoutLevel(station.id));
+    }
+
+    const handleDowngrade = () => {
+
+        // Decrease hideout level
+        dispatch(decreaseHideoutLevel(station.id));
+    }
 
     // Use the station.id to determine if the station is locked
     const isLocked = !!lockedStations.find((lockedStation) => lockedStation.id === station.id);

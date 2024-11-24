@@ -1,0 +1,9 @@
+.data-controls{
+	display: flex;
+	flex-direction: column;
+}
+
+.data-control-buttons{
+	display: flex;
+	margin: 15px 0;
+}

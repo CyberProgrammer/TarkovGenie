@@ -1,19 +1,20 @@
 import {
     ADD_COMPLETED_TASK,
     CHANGE_FILTER_BY, CHANGE_STATUS_FILTER,
-    CHANGE_TRADER_FILTER,
+    CHANGE_TRADER_FILTER, LOAD_TASK_DATA,
     UNDO_COMPLETED_TASK,
     UPDATE_ACTIVE_TASKS, UPDATE_COMPLETED_TASKS,
     UPDATE_LOCKED_TASKS
 } from '../actionTypes/actionTypes.js';
 
 import {Task} from "@customTypes/quest.ts";
-import {ReducerActions, TaskDataState, TaskStatusFilter, UserTasksState} from 'types/types';
+import {TaskDataState, TaskStatusFilter, UserTasksState} from 'types/types';
 import TaskList from '../../data/tasks.json';
 
 import {getCurrentActive} from "@helpers/getActiveTasks.ts";
 import {getCurrentLocked} from "@helpers/getLockedTasks.ts";
 import {undoCompletedTask} from "@helpers/undoCompletedTask.ts";
+import {TaskActions} from "@customTypes/tasks.ts";
 
 const userLevel = 1;
 
@@ -41,8 +42,20 @@ const initialTasksState : UserTasksState = {
     filterByTrader: false
 };
 
-const tasksReducer = (state = initialTasksState, action: ReducerActions) => {
+const tasksReducer = (state = initialTasksState, action: TaskActions) => {
     switch (action.type) {
+        case LOAD_TASK_DATA: {
+            const { filterByTrader, statusFilter, tasksCompleted, tasksCount, traderFilter, userTaskData } = action.payload as UserTasksState;
+            return {
+                ...state,
+                filterByTrader: filterByTrader,
+                statusFilter: statusFilter,
+                tasksCompleted: tasksCompleted,
+                tasksCount: tasksCount,
+                traderFilter: traderFilter,
+                userTaskData: userTaskData,
+            };
+        }
         case CHANGE_TRADER_FILTER:
             return {
                 ...state,

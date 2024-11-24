@@ -1,12 +1,13 @@
-import { INCREASE_LEVEL, DECREASE_LEVEL } from '../actionTypes/actionTypes.js';
-import { ReducerActionString, UserState } from '../types/types';
+import {INCREASE_LEVEL, DECREASE_LEVEL, LOAD_USER_DATA} from '../actionTypes/actionTypes.js';
+import {UserState} from '../types/types';
+import {UserActions} from "@customTypes/user.ts";
 
 const initialUserState : UserState = {
     userLevel: 1,
     username: "Test"
 };
 
-const userReducer = (state = initialUserState, action: ReducerActionString) => {
+const userReducer = (state = initialUserState, action: UserActions) => {
     switch (action.type) {
         case INCREASE_LEVEL:
             return {
@@ -18,6 +19,14 @@ const userReducer = (state = initialUserState, action: ReducerActionString) => {
                 ...state,
                 userLevel: state.userLevel > 1 ? state.userLevel - 1 : state.userLevel,
             };
+        case LOAD_USER_DATA:{
+            const { userLevel, username } = action.payload;
+            return {
+                userLevel: userLevel,
+                username: username
+            };
+        }
+
         default:
             return state;
     }

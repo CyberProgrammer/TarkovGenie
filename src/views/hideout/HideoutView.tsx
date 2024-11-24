@@ -70,7 +70,7 @@ const HideoutView = () => {
                                 </div>
                                 <div className={'hideout-card-requirements'}>
                                     {
-                                        station.level === stationData.find((st) => st.id === station.id)?.levels.length && (
+                                        station.level === (stationData.find((st) => st.id === station.id)?.levels?.length ?? 0) && (
                                             <div>
                                                 <h3>Maxed level</h3>
                                             </div>
