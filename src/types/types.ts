@@ -9,6 +9,7 @@ import {Task} from 'types/quest';
 // Navigation state
 export interface NavState{
     navVisible: boolean;
+    currentPath: string;
 }
 
 // User info state

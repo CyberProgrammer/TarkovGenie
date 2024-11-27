@@ -1,6 +1,6 @@
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "@reducers/rootReducer.ts";
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {loadUserData} from "../../actions/userActions.ts";
 import {loadTaskData} from "../../actions/taskActions.ts";
 import {loadHideoutData} from "../../actions/hideoutActions.ts";
@@ -36,55 +36,38 @@ const SettingsView = () => {
 
     const [importedData, setImportedData] = useState<importData | null>(null);
 
-    const handleExport = () => {
-        // Convert JSON data to a string
-        const jsonData = JSON.stringify(combinedData, null, 2);
-
-        // Create a Blob from the JSON string
-        const blob = new Blob([jsonData], { type: 'application/json' });
-
-        // Create a URL for the Blob
-        const url = URL.createObjectURL(blob);
-
-        // Create time
-        const month = new Date().getMonth();
-        const day = new Date().getDay();
-        const year = new Date().getFullYear();
-
-        const datetime = month + '-' + day + '-' + year;
-
-        // Create an anchor element
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `${profileData.username} ${datetime}.json`; // Filename for the downloaded file
-
-        // Append the link to the document, click it, and remove it
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-
-        // Release the URL
-        URL.revokeObjectURL(url);
-    };
-
-    const handleImport = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = () => {
-                try {
-                    if (typeof reader.result === "string") {
-                        const jsonData = JSON.parse(reader.result);
-                        setImportedData(jsonData);
-                        console.log("Imported data:", jsonData);
-                    }
-                } catch (error) {
-                    console.error("Error parsing JSON:", error);
-                }
-            };
-            reader.readAsText(file);
+    const handleSave = async () => {
+        try {
+            const response = await window.electron.saveData(combinedData);
+            console.log(response.message);
+        } catch (error) {
+            console.error("Error saving data:", error);
         }
     };
+
+    const handleImport = async () => {
+        try {
+            // Call openFileDialog to open the file dialog from the main process
+            const filePath = await window.electron.openFileDialog();
+
+            // Check if a file was selected
+            if (filePath) {
+                // Read the selected file using FileReader
+                const file = await fetch(filePath);  // Fetch the file content as a response
+                const fileText = await file.text();  // Get the text content of the file
+
+                // Parse the JSON data from the file
+                const jsonData = JSON.parse(fileText);
+                setImportedData(jsonData);
+                console.log("Imported data:", jsonData);
+            } else {
+                console.log("No file selected");
+            }
+        } catch (error) {
+            console.error("Error importing data:", error);
+        }
+    };
+
 
     useEffect(() => {
         if (!importedData) return;
@@ -122,16 +105,16 @@ const SettingsView = () => {
                 <div className={'data-controls'}>
                     <h2>Import / Export Data</h2>
                     <div className={'data-control-buttons'}>
-                        <button onClick={handleExport} className={"setting-btn"}>Export JSON</button>
-                        <input
-                            type="file"
-                            accept=".json"
-                            onChange={handleImport}
-                            style={{display: 'none'}}
-                            id="file-input"
-                        />
+                        <button onClick={handleSave} className={"setting-btn"}>Export JSON</button>
+                        {/*<input*/}
+                        {/*    type="file"*/}
+                        {/*    accept=".json"*/}
+                        {/*    onChange={handleImport}*/}
+                        {/*    style={{display: 'none'}}*/}
+                        {/*    id="file-input"*/}
+                        {/*/>*/}
                         <button
-                            onClick={() => document.getElementById("file-input")?.click()}
+                            onClick={handleImport}
                             className="setting-btn"
                         >
                             Load JSON
@@ -139,7 +122,7 @@ const SettingsView = () => {
                     </div>
                     {importedData && (
                         <div>
-                            <h3>Data imported!</h3>
+                            <h3>Data saved to /saves folder</h3>
                         </div>
                     )}
                 </div>

@@ -1,5 +1,10 @@
-import {DECREASE_HIDEOUT_LEVEL, INCREASE_HIDEOUT_LEVEL, LOAD_HIDEOUT_DATA} from "../actionTypes/actionTypes.ts";
-import HideoutData from "@data/hideout.json";
+import {
+    DECREASE_HIDEOUT_LEVEL,
+    INCREASE_HIDEOUT_LEVEL,
+    LOAD_HIDEOUT_DATA,
+    UPDATE_STATION_DATA
+} from "../actionTypes/actionTypes.ts";
+
 import {HideoutActions, HideoutStation, HideoutUserData} from "@customTypes/hideout.ts";
 
 interface HideoutState {
@@ -8,7 +13,7 @@ interface HideoutState {
 }
 
 const initialHideoutState: HideoutState = {
-    stationData: HideoutData.data.hideoutStations,
+    stationData: [],
     userStationData: [
         {
             id: "5d388e97081959000a123acf",
@@ -171,6 +176,11 @@ const initialHideoutState: HideoutState = {
 
 const hideoutReducer = (state = initialHideoutState, action: HideoutActions) => {
     switch (action.type) {
+        case UPDATE_STATION_DATA:
+            return {
+                ...state,
+                stationData: action.payload,
+            };
         case LOAD_HIDEOUT_DATA: {
             const hideoutData = action.payload;
             console.log("TEST", hideoutData);

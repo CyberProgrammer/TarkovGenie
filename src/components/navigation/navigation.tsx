@@ -11,11 +11,9 @@ import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from '@reducers/rootReducer';
 
-import { closeNav } from 'actions/userActions';
+import {changePath, closeNav} from 'actions/userActions';
 import useWindowWidth from '@hooks/useWindowWidth';
-import { useLocation } from 'react-router-dom';
 
-import {SelectedNav} from "@customTypes/enums.ts";
 import LinkComponent from "@components/navigation/link.tsx";
 import UserLevelWrapper from "@components/wrapper/userLevel.tsx";
 
@@ -23,21 +21,24 @@ const Navigation = () => {
     const navState = useSelector((state: RootState)=> state.nav);
 
     const dispatch = useDispatch();
-    const location = useLocation();
 
     // Determines what route is in view
-    const [selected, setSelected] = useState(SelectedNav.Dashboard);
+    const [selected, setSelected] = useState("Dashboard");
+    const currentPath = useSelector((root: RootState) => root.nav.currentPath);
+
+    useEffect(() => {
+        if(selected != currentPath){
+            dispatch(changePath(selected));
+        }
+    }, [selected]);
 
     const links = useMemo(() => [
-        { to: "/", icon: DashboardIcon, label: "Dashboard", value: SelectedNav.Dashboard },
-        { to: "/tasks", icon: TasksIcon, label: "Tasks", value: SelectedNav.Tasks },
-        { to: "/needed-items", icon: ItemsIcon, label: "Needed Items", value: SelectedNav.NeededItems },
-        { to: "/hideout", icon: HideoutIcon, label: "Hideout", value: SelectedNav.Hideout },
-        { to: "/settings", icon: SettingsIcon, label: "Settings", value: SelectedNav.Settings },
+        { to: "/", icon: DashboardIcon, value: "Dashboard" },
+        { to: "/tasks", icon: TasksIcon, value: "Tasks" },
+        { to: "/needed-items", icon: ItemsIcon, value: "Needed Items" },
+        { to: "/hideout", icon: HideoutIcon, value: "Hideout" },
+        { to: "/settings", icon: SettingsIcon, value: "Settings" },
     ], []);
-
-    // Task updates handling
-
 
     // State of navigation menu visibility
     const navigationVisibility = navState.navVisible;
@@ -73,11 +74,11 @@ const Navigation = () => {
         };
     }, [navigationVisibility]);
 
-    useEffect(() => {
-        const currentPath = location.pathname;
-        const selectedLink = links.find(link => link.to === currentPath);
-        setSelected(selectedLink ? selectedLink.value : SelectedNav.Dashboard);
-    }, [location.pathname, links]);
+    // useEffect(() => {
+    //     const currentPath = location.pathname;
+    //     const selectedLink = links.find(link => link.to === currentPath);
+    //     setSelected(selectedLink ? selectedLink.value : SelectedNav.Dashboard);
+    // }, [location.pathname, links]);
 
     return(
         <>
@@ -93,11 +94,10 @@ const Navigation = () => {
                     <UserLevelWrapper />
                     <div className="navigation-links">
                         <ul>
-                            {links.map(({ to, icon, label, value }) => (
+                            {links.map(({ to, icon, value }) => (
                                 <LinkComponent
                                     to={to}
                                     icon={icon}
-                                    label={label}
                                     key={to}
                                     value={value}
                                     selected={selected}

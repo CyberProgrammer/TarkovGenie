@@ -3,13 +3,17 @@ import {RootState} from "@reducers/rootReducer.ts";
 import {useDispatch, useSelector} from "react-redux";
 
 import "@styles/views/items/neededItems.css";
-import {HideoutItemNeeded, TaskItemNeeded} from "@customTypes/items.ts";
+import {HideoutItemNeeded, ItemData, TaskItemNeeded} from "@customTypes/items.ts";
 
 import PlusIcon from "@icons/needed_items/plus.svg";
 import MinusIcon from "@icons/needed_items/minus.svg";
 
 import {findDefaultGunItem} from "@helpers/needed/findDefaultGunItem.ts";
-import {decreaseFoundItemCount, increaseFoundItemCount, toggleCompletion} from "../../actions/itemsActions.ts";
+import {
+    decreaseFoundItemCount,
+    increaseFoundItemCount,
+    toggleCompletion,
+} from "../../actions/itemsActions.ts";
 
 const NeededItemsView = () => {
     const dispatch = useDispatch();
@@ -17,9 +21,9 @@ const NeededItemsView = () => {
     const [visibleTasks, setVisibleTasks] = useState<number>(15);
     const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
-    const allItemData = useSelector((state: RootState) => state.itemsNeeded.allItemData);
-    const userTaskItemsNeeded = useSelector((state: RootState) => state.itemsNeeded.neededTaskItems);
-    const userHideoutItemsNeeded = useSelector((state: RootState) => state.itemsNeeded.neededHideoutItems);
+    const allItemData = useSelector((state: RootState) => state.itemsNeeded.allItemData as ItemData[]);
+    const userTaskItemsNeeded = useSelector((state: RootState) => state.itemsNeeded.neededTaskItems as TaskItemNeeded[]);
+    const userHideoutItemsNeeded = useSelector((state: RootState) => state.itemsNeeded.neededHideoutItems as HideoutItemNeeded[]);
 
     const [selectedFilter, setSelectedFilter] = useState('All');
     const [searchQuery, setSearchQuery] = useState("");

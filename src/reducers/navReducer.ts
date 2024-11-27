@@ -1,9 +1,10 @@
-import { TOGGLE_NAV, CLOSE_NAV } from '../actionTypes/actionTypes.js';
+import {TOGGLE_NAV, CLOSE_NAV, CHANGE_PATH} from '../actionTypes/actionTypes.js';
 
-import {NavState, ReducerActionString } from 'types/types'
+import {NavState, ReducerActionString} from 'types/types'
 
 const initialNavState : NavState = {
     navVisible: true,
+    currentPath: "Dashboard"
 };
 
 const navReducer = (state = initialNavState, action: ReducerActionString) => {
@@ -18,6 +19,13 @@ const navReducer = (state = initialNavState, action: ReducerActionString) => {
                 ...state,
                 navVisible: false,
             };
+        case CHANGE_PATH:{
+            const newPath = action.payload;
+            return {
+                ...state,
+                currentPath: newPath
+            }
+        }
         default:
             return state;
     }

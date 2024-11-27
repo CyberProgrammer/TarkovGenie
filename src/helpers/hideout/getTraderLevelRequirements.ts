@@ -1,6 +1,18 @@
 import {HideoutStation, UserStationData} from "@customTypes/hideout.ts";
 
 export const getTraderLevelRequirements = (id:string, stationData: HideoutStation[], userStations: UserStationData[]) => {
+    const noRequirement = [{
+        "id": "-2",
+        "value": "-2",
+        "trader":{
+            "name": "No requirement",
+            "imageLink": ""
+        }
+    }]
+
+    if(stationData.length == 0)
+        return noRequirement;
+
     const userStation = userStations.find((station) => station.id === id);
 
     const errorMessage = [{
@@ -12,14 +24,7 @@ export const getTraderLevelRequirements = (id:string, stationData: HideoutStatio
         }
     }]
 
-    const noRequirement = [{
-        "id": "-2",
-        "value": "-2",
-        "trader":{
-            "name": "No requirement",
-            "imageLink": ""
-        }
-    }]
+
 
     if(!userStation){
         console.error("User station (", id, ") not found in user data");

@@ -3,10 +3,11 @@ import {
     DECREASE_FOUND_ITEM_COUNT,
     INCREASE_FOUND_ITEM_COUNT,
     INCREASE_HIDEOUT_ITEM_COUNT, LOAD_ITEM_DATA,
-    TOGGLE_COMPLETION_STATUS
+    TOGGLE_COMPLETION_STATUS, UPDATE_ITEMS_DATA
 } from "../actionTypes/actionTypes.ts";
 
-import {HideoutUserData} from "@customTypes/hideout.ts";
+import {HideoutStation, HideoutUserData} from "@customTypes/hideout.ts";
+import {Task} from "@customTypes/quest.ts";
 
 export interface TaskItemNeeded{
     id: string;
@@ -92,10 +93,19 @@ interface ItemsDataAction{
     payload: ItemsNeededState
 }
 
+interface ItemsUpdateAction{
+    type: typeof UPDATE_ITEMS_DATA;
+    payload: {
+        apiHideoutData: HideoutStation[],
+        apiTaskData: Task[],
+        apiItemData: ItemData[]
+    };
+}
 
 export type ItemActions = CompleteItemsFromTask |
     IncreaseItemCountAction |
     DecreaseItemCountAction |
     IncreaseHideoutItemCountAction |
     ToggleCompletionAction |
-    ItemsDataAction;
+    ItemsDataAction |
+    ItemsUpdateAction;

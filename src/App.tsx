@@ -7,7 +7,7 @@ import Footer from '@components/footer/footer';
 import DashboardView from '@views/dashboard/DashboardView.tsx';
 import ContentHeader from '@components/headers/content_header';
 
-import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+import {HashRouter as Router, Route, Routes} from 'react-router-dom';
 
 import { RootState } from '@reducers/rootReducer';
 import {useSelector} from 'react-redux';
@@ -36,23 +36,23 @@ function App() {
     const routes = [
         {
             path: "/",
-            element: <DashboardView/>
+            component: <DashboardView/>
         },
         {
             path: "/tasks",
-            element: <TasksView/>
+            component: <TasksView/>
         },
         {
             path: "/hideout",
-            element: <HideoutView/>
+            component: <HideoutView/>
         },
         {
             path: "/needed-items",
-            element: <NeededItems/>
+            component: <NeededItems/>
         },
         {
             path: "/settings",
-            element: <SettingsView/>
+            component: <SettingsView/>
         },
     ]
 
@@ -65,7 +65,7 @@ function App() {
                         <ContentHeader/>
                         <Routes>
                             { routes.map(route => (
-                              <Route key={route.path} path={route.path} element={route.element}/>
+                                <Route key={route.path} path={route.path} element={route.component}/>
                             ))}
                         </Routes>
                         <Footer/>

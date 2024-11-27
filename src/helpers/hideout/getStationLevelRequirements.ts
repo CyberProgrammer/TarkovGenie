@@ -1,6 +1,9 @@
 import {HideoutStation, UserStationData} from "@customTypes/hideout.ts";
 
 export const getStationLevelRequirements = (id: string, stationData: HideoutStation[], userStations: UserStationData[]) => {
+    if(stationData.length == 0)
+        return [];
+
     const stationDetails = stationData.find((station) => station.id === id);
     const stationLevel = userStations.find((station) => station.id === id)?.level;
 
