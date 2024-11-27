@@ -1,9 +1,5 @@
-import AllItemData from '@data/items.json';
 import {HideoutItemNeeded, ItemActions, ItemsNeededState, TaskItemNeeded} from "@customTypes/items.ts";
 import {Task} from "@customTypes/quest.ts";
-
-import TaskList from "@data/tasks.json";
-import HideoutData from "@data/hideout.json";
 
 import {HideoutStation} from "@customTypes/hideout.ts";
 import {
@@ -12,40 +8,28 @@ import {
     INCREASE_FOUND_ITEM_COUNT,
     INCREASE_HIDEOUT_ITEM_COUNT,
     LOAD_ITEM_DATA,
-    TOGGLE_COMPLETION_STATUS
+    TOGGLE_COMPLETION_STATUS, UPDATE_ITEMS_DATA
 } from "../actionTypes/actionTypes.ts";
 
-const allTaskData: Task[] = TaskList.data.tasks;
-const allHideoutData = HideoutData.data.hideoutStations;
-
-const taskItemsNeeded = generateNeededTaskItems(allTaskData);
-const hideoutItemsNeeded = generateNeededHideoutItems(allHideoutData);
-console.log("HideoutItemsNeeded: ", hideoutItemsNeeded);
-
-const isCurrencyItem = ["Euros", "Dollars", "Roubles"]
-const taskItemsNeededCount: number = taskItemsNeeded.reduce((acc, taskItem) => {
-    if(isCurrencyItem.includes(taskItem.item)){
-        acc += 1;
-    } else{
-        acc += Number(taskItem.totalCount);
-    }
-    return acc;
-}, 0)
-
-console.log(taskItemsNeeded);
 
 const initialItemState : ItemsNeededState = {
-    allItemData: AllItemData.data.items,
-    neededTaskItems: taskItemsNeeded,
+    allItemData: [],
+    neededTaskItems: [],
     taskItemCount: 0,
-    taskItemTotalCount: taskItemsNeededCount,
-    neededHideoutItems: hideoutItemsNeeded,
+    taskItemTotalCount: 0,
+    neededHideoutItems: [],
     hideoutItemCount: 0,
-    hideoutItemTotalCount: hideoutItemsNeeded.length,
+    hideoutItemTotalCount: 0,
 }
 
 export function generateNeededTaskItems(allTaskData: Task[]): TaskItemNeeded[] {
     const itemsToFind: TaskItemNeeded[] = [];
+
+    if(!allTaskData){
+        console.log("No task data...");
+        return [];
+    }
+
 
     allTaskData.forEach((task) => {
         const taskID = task.id;
@@ -101,10 +85,16 @@ export function generateNeededTaskItems(allTaskData: Task[]): TaskItemNeeded[] {
     return itemsToFind;
 }
 
-function generateNeededHideoutItems(allHideoutData: HideoutStation[]){
+function generateNeededHideoutItems(hideoutStations: HideoutStation[]){
     const itemsToFind: HideoutItemNeeded[] = [];
 
-    allHideoutData.map((station) => {
+    if(!hideoutStations){
+        console.log("No hideout data...");
+        return [];
+    }
+
+
+    hideoutStations.map((station) => {
         if(station && station.levels){
             station.levels.map((level) =>
                 level.itemRequirements.map((requirement) => {
@@ -125,6 +115,39 @@ function generateNeededHideoutItems(allHideoutData: HideoutStation[]){
 
 const itemsReducer = (state: ItemsNeededState = initialItemState, action: ItemActions) => {
     switch (action.type){
+        case UPDATE_ITEMS_DATA:{
+            const { apiHideoutData, apiTaskData, apiItemData } = action.payload;
+
+            let taskItemsNeeded = state.neededTaskItems;
+            let hideoutItemsNeeded = state.neededHideoutItems;
+
+            if(state.neededTaskItems.length == 0){
+                taskItemsNeeded = generateNeededTaskItems(apiTaskData);
+            }
+
+            if(state.neededHideoutItems.length == 0){
+                hideoutItemsNeeded = generateNeededHideoutItems(apiHideoutData);
+            }
+
+            const isCurrencyItem = ["Euros", "Dollars", "Roubles"]
+            const taskItemsNeededCount: number = taskItemsNeeded.reduce((acc, taskItem) => {
+                if(isCurrencyItem.includes(taskItem.item)){
+                    acc += 1;
+                } else{
+                    acc += Number(taskItem.totalCount);
+                }
+                return acc;
+            }, 0)
+
+            return{
+                ...state,
+                allItemData: apiItemData,
+                neededHideoutItems: hideoutItemsNeeded,
+                hideoutItemTotalCount: hideoutItemsNeeded.length,
+                neededTaskItems: taskItemsNeeded,
+                taskItemTotalCount: taskItemsNeededCount
+            }
+        }
         case LOAD_ITEM_DATA:{
             const {taskItemTotalCount, taskItemCount, hideoutItemTotalCount, neededHideoutItems, allItemData, neededTaskItems, hideoutItemCount} = action.payload;
             return{
@@ -171,8 +194,6 @@ const itemsReducer = (state: ItemsNeededState = initialItemState, action: ItemAc
                 }
             })
 
-            console.log("Needed items: ", state.neededHideoutItems);
-            console.log("Current Station Data: ", currentStationData);
             const updatedHideoutItems = state.neededHideoutItems.map((item) => {
                 // Check if there's a matching entry in currentStationData
                 const matchingItem = currentStationData.find((req) => req.id === item.id);
@@ -360,7 +381,7 @@ const itemsReducer = (state: ItemsNeededState = initialItemState, action: ItemAc
             console.log('Task items to complete: ', itemsList);
 
             if (!Array.isArray(itemsList) || itemsList.length === 0) {
-                console.error("Payload is not a valid array:", itemsList);
+                console.error("Payload has no items to complete (Do nothing)", itemsList);
                 return state;
             }
 

@@ -12,7 +12,6 @@
 
 @media screen and (max-height: 875px){
 	#app .footer-container{
-		width: 100%;
 		position: relative;
 	}
 }

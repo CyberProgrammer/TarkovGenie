@@ -1,5 +1,10 @@
-import {INCREASE_HIDEOUT_LEVEL, DECREASE_HIDEOUT_LEVEL, LOAD_HIDEOUT_DATA} from "../actionTypes/actionTypes.ts";
-import {HideoutUserData} from "@customTypes/hideout.ts";
+import {
+    INCREASE_HIDEOUT_LEVEL,
+    DECREASE_HIDEOUT_LEVEL,
+    LOAD_HIDEOUT_DATA,
+    UPDATE_STATION_DATA
+} from "../actionTypes/actionTypes.ts";
+import {HideoutStation, HideoutUserData} from "@customTypes/hideout.ts";
 
 const increaseHideoutLevel = (hideoutID: string) => {
     return{
@@ -15,6 +20,13 @@ const decreaseHideoutLevel = (hideoutID: string) => {
     }
 }
 
+const updateStationData = (stationData: HideoutStation[]) => {
+    return{
+        type: UPDATE_STATION_DATA,
+        payload: stationData
+    }
+}
+
 const loadHideoutData = (hideoutData: HideoutUserData[]) => {
     return{
         type: LOAD_HIDEOUT_DATA,
@@ -24,5 +36,6 @@ const loadHideoutData = (hideoutData: HideoutUserData[]) => {
 export {
     increaseHideoutLevel,
     decreaseHideoutLevel,
-    loadHideoutData
+    loadHideoutData,
+    updateStationData
 }

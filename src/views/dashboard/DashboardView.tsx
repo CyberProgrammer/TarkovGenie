@@ -2,10 +2,41 @@ import DashboardCard from '@components/cards/dashboard_card';
 import '@styles/views/dashboard/dashboard.css'
 
 import Scav from '@images/scav.png';
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "@reducers/rootReducer.ts";
+import {useEffect} from "react";
+import {fetchHideoutData} from "../../api/fetch/fetchHideoutData.ts";
+import {fetchTaskData} from "../../api/fetch/fetchTaskData.ts";
+import {fetchItemData} from "../../api/fetch/fetchItemData.ts";
+import {updateItemsData} from "../../actions/itemsActions.ts";
+import {updateStationData} from "../../actions/hideoutActions.ts";
 
 const DashboardView = () => {
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const apiHideoutData = await fetchHideoutData();
+            const apiTaskData = await fetchTaskData();
+            const apiItemData = await fetchItemData();
+            // console.log("Item data: ", apiItemData);
+            // console.log("Hideout data: ", apiHideoutData);
+            // console.log("Task data: ", apiTaskData);
+
+            if(apiHideoutData.length == 0 || apiTaskData.length == 0 || apiItemData.length == 0){
+                console.log("Missing data...");
+                return;
+            }
+
+            // Update item data
+            dispatch(updateItemsData(apiHideoutData, apiTaskData, apiItemData));
+
+            // Update hideout data
+            dispatch(updateStationData(apiHideoutData))
+        }
+
+        fetchData();
+    }, []);
 
     const alert  = {
         title: 'Wipe Update',

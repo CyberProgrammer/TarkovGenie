@@ -10,6 +10,12 @@
 	}
 }
 
+@media screen and (max-height: 850px) {
+	.dashboard-cards-wrapper{
+		margin-bottom: 75px;
+	}
+}
+
 .dashboard-card{
 	display: flex;
 	flex-direction: column;

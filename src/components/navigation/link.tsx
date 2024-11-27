@@ -1,16 +1,14 @@
 import React from "react";
-import {SelectedNav} from "@customTypes/enums.ts";
 import {Link} from "react-router-dom";
 
 interface LinkProps{
     to: string;
     icon: string;
-    label: string;
-    value: SelectedNav;
-    selected: SelectedNav;
-    setSelected: (selected: SelectedNav) => void;
+    value: string;
+    selected: string;
+    setSelected: (selected: string) => void;
 }
-const LinkComponent: React.FC<LinkProps> = ({to, icon, label, value, selected, setSelected}) => {
+const LinkComponent: React.FC<LinkProps> = ({to, icon, value, selected, setSelected}) => {
 
     return (
         <li className='navigation-item' key={value}>
@@ -20,10 +18,10 @@ const LinkComponent: React.FC<LinkProps> = ({to, icon, label, value, selected, s
                 onClick={() => setSelected(value)}
             >
                 <div className='navigation-link-image-wrapper'>
-                    <img className='navigation-link-image' src={icon} alt={`${label} icon`}/>
+                    <img className='navigation-link-image' src={icon} alt={`${value} icon`}/>
                 </div>
                 <div className='navigation-link-text'>
-                    {label}
+                    {value}
                 </div>
             </Link>
         </li>

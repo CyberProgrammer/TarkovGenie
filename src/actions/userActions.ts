@@ -5,7 +5,7 @@ import
     INCREASE_LEVEL,
     DECREASE_LEVEL,
     CHANGE_TRADER_FILTER,
-    CHANGE_FILTER_BY, CHANGE_STATUS_FILTER, LOAD_USER_DATA
+    CHANGE_FILTER_BY, CHANGE_STATUS_FILTER, LOAD_USER_DATA, CHANGE_PATH
 } from '../actionTypes/actionTypes';
 
 import {TaskStatusFilter, UserState} from "@customTypes/types.ts";
@@ -21,6 +21,13 @@ const toggleNav = () => {
 const closeNav = () => {
     return {
         type: CLOSE_NAV,
+    }
+}
+
+const changePath = (path: string) => {
+    return {
+        type: CHANGE_PATH,
+        payload: path
     }
 }
 
@@ -71,6 +78,7 @@ export
 {
     toggleNav,
     closeNav,
+    changePath,
     increaseLevel, 
     decreaseLevel,
     changeTraderFilter,

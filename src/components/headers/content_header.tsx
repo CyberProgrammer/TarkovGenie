@@ -1,36 +1,14 @@
 import '@styles/header/header.css';
 
-import { useLocation } from 'react-router-dom';
-
 import MenuIcon from '@icons/menu.svg';
-import { useDispatch } from 'react-redux';
-import { toggleNav } from 'actions/userActions';
+import {useDispatch, useSelector} from 'react-redux';
+import {toggleNav} from 'actions/userActions';
+import {RootState} from "@reducers/rootReducer.ts";
 
 const ContentHeader = () => {
     const dispatch = useDispatch();
 
-    const location = useLocation();
-    let currentPath;
-
-    switch (location.pathname) {
-        case '/':
-            currentPath = 'Dashboard'
-            break;
-        case '/tasks':
-            currentPath = 'Tasks'
-            break;
-        case '/needed-items':
-            currentPath = 'Needed Items'
-            break;
-        case '/hideout':
-            currentPath = 'Hideout'
-            break;
-        case '/settings':
-            currentPath = 'Settings'
-            break;
-        default:
-            break;
-    }
+    const currentPath = useSelector((root: RootState) => root.nav.currentPath);
 
     return(
         <>

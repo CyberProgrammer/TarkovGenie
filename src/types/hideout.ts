@@ -42,7 +42,7 @@ interface SkillRequirement {
     level: number;
 }
 
-interface ItemRequirement {
+export interface ItemRequirement {
     id: string;
     count: number;
     item: {

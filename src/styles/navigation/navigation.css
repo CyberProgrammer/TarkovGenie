@@ -133,6 +133,7 @@
 /* User level wrapper */
 .user-level-wrapper{
 	display: flex;
+	font-weight: 1000;
 	margin: 10% 0;
 	padding: 5% 0;
 	border-top: 1px solid var(--gray-background-transparent);
