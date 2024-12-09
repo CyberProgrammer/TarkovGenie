@@ -13,11 +13,12 @@ import { RootState } from '@reducers/rootReducer';
 import {useSelector} from 'react-redux';
 
 import useWindowWidth from './hooks/useWindowWidth';
-import {useEffect, useRef } from 'react';
+import {useEffect, useRef} from 'react';
 import TasksView from '@views/tasks/TasksView';
 import HideoutView from "@views/hideout/HideoutView.tsx";
 import NeededItems from "@views/needed_items/NeededItemsView.tsx";
 import SettingsView from "@views/settings/SettingsView.tsx";
+import ProfileSelection from "@views/profile/ProfileSelection.tsx";
 
 function App() {
     const navState = useSelector((state: RootState) => state.nav);
@@ -39,6 +40,10 @@ function App() {
             component: <DashboardView/>
         },
         {
+            path: "/profiles",
+            component: <ProfileSelection/>
+        },
+        {
             path: "/tasks",
             component: <TasksView/>
         },
@@ -55,6 +60,25 @@ function App() {
             component: <SettingsView/>
         },
     ]
+
+    const profileData = useSelector((root: RootState) => root.user);
+    const hideoutData = useSelector((root: RootState) => root.hideout.userStationData);
+    const taskData = useSelector((root: RootState) => root.tasks);
+    const itemsData = useSelector((root: RootState) => root.itemsNeeded);
+
+    useEffect(() => {
+        const updateIPC = async () => {
+            try{
+                const state = {profileData, hideoutData, taskData, itemsData};
+                const response = await window.electron.updateReduxState(state);
+                console.log("Updated IPC data...");
+            } catch (err){
+                console.error("Error updating IPC data...", err);
+            }
+        }
+
+        updateIPC();
+    }, [profileData, hideoutData, taskData, itemsData]);
 
     return (
         <Router>

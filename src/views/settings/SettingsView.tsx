@@ -1,19 +1,19 @@
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "@reducers/rootReducer.ts";
 import {useEffect, useState} from "react";
-import {loadUserData} from "../../actions/userActions.ts";
-import {loadTaskData} from "../../actions/taskActions.ts";
-import {loadHideoutData} from "../../actions/hideoutActions.ts";
-import {loadItemsData} from "../../actions/itemsActions.ts";
+import {modifyUsername} from "../../actions/userActions.ts";
 
 import '@styles/views/settings/settings.css';
 import '@styles/buttons/setting_btn.css';
-import {UserState, UserTasksState} from "@customTypes/types.ts";
-import {HideoutUserData} from "@customTypes/hideout.ts";
-import {ItemsNeededState} from "@customTypes/items.ts";
+import {importData} from "@customTypes/types.ts";
+import loadDataDispatch from "@helpers/data/loadDataDispatch.ts";
+import handleImport from "@helpers/data/importFromFile.ts";
 
 const SettingsView = () => {
     const dispatch = useDispatch();
+
+    // State for tracking when data was exported
+    const [hasExported, setHasExported] = useState(false);
 
     const profileData = useSelector((root: RootState) => root.user);
     const hideoutData = useSelector((root: RootState) => root.hideout.userStationData);
@@ -27,104 +27,117 @@ const SettingsView = () => {
         itemsData
     }
 
-    interface importData{
-        profileData: UserState,
-        hideoutData: HideoutUserData[],
-        taskData: UserTasksState,
-        itemsData: ItemsNeededState
-    }
-
     const [importedData, setImportedData] = useState<importData | null>(null);
-
     const handleSave = async () => {
         try {
             const response = await window.electron.saveData(combinedData);
-            console.log(response.message);
+            console.log("Response: ", response);
+            setHasExported(true);
+            console.log("True")
         } catch (error) {
             console.error("Error saving data:", error);
         }
     };
 
-    const handleImport = async () => {
-        try {
-            // Call openFileDialog to open the file dialog from the main process
-            const filePath = await window.electron.openFileDialog();
+    useEffect(() => {
+        if(hasExported){
+            const timer = setTimeout(() => {
+                setHasExported(false);
+                console.log("False")
+            }, 5000);
 
-            // Check if a file was selected
-            if (filePath) {
-                // Read the selected file using FileReader
-                const file = await fetch(filePath);  // Fetch the file content as a response
-                const fileText = await file.text();  // Get the text content of the file
-
-                // Parse the JSON data from the file
-                const jsonData = JSON.parse(fileText);
-                setImportedData(jsonData);
-                console.log("Imported data:", jsonData);
-            } else {
-                console.log("No file selected");
-            }
-        } catch (error) {
-            console.error("Error importing data:", error);
+            return () => clearTimeout(timer);
         }
-    };
-
-
+    }, [hasExported]);
     useEffect(() => {
         if (!importedData) return;
 
-        const profileData = importedData.profileData;
-        const hideoutData = importedData.hideoutData;
-        const taskData = importedData.taskData;
-        const itemData = importedData.itemsData;
+        // Load data helper
+        loadDataDispatch(importedData, dispatch);
+    }, [importedData]);
 
-        // Dispatch to update user data
-        console.log("User data: ", profileData.userLevel);
-        if(!Number.isInteger(profileData.userLevel) || profileData.userLevel < 1 || profileData.userLevel > 79){
-            console.log("User level is not valid...");
+    // State to unlock / lock username editing
+    const [modifyUser, setModifyUser] = useState(false);
+
+    const handleUpdateUser = () => {
+        setModifyUser(true);
+    }
+
+    const [error, setError] = useState<string | null>(null);
+    const handleConfirmUser = () => {
+        if(document.getElementById('username') == null){
             return;
         }
-        dispatch(loadUserData(profileData));
 
-        // Dispatch to update hideout data
-        console.log("Hideout data: ", hideoutData);
-        dispatch(loadHideoutData(hideoutData));
+        const userField = document.getElementById('username') as HTMLInputElement;
+        const input = userField.value;
 
-        // Dispatch to update task data
-        console.log("Task data: ", taskData);
-        dispatch(loadTaskData(taskData));
+        if(input.length == 0){
+            setError("Profile name is blank!");
+            return;
+        }
 
-        // Dispatch to update item data
-        console.log("Item data: ", itemData);
-        dispatch(loadItemsData(itemData));
+        if(input.length > 15){
+            setError("Profile must be less than 15 characters!");
+            userField.value = "";
+            return;
+        }
 
-    }, [importedData]);
+        dispatch(modifyUsername(input));
+        setModifyUser(false);
+        setError(null);
+    }
 
     return (
         <div className={'view-content'}>
             <div id={'content-container'}>
-                <div className={'data-controls'}>
+                <div className={'username-container'}>
+                    <h2>Profile Name</h2>
+                    {
+                        error !== null && (
+                            <h3 className={'error'}>{error}</h3>
+                        )
+                    }
+
+                    <div className={'username-control'}>
+                        <input id={'username'}
+                               className={'username-input'}
+                               type={'text'}
+                               placeholder={profileData.username}
+                               disabled={!modifyUser}
+                        />
+                        {!modifyUser ?
+                            <button className={'username-btn'} onClick={handleUpdateUser}>Update</button> :
+                            <button className={'username-btn'} onClick={handleConfirmUser}>Confirm</button>
+                        }
+
+                    </div>
+                </div>
+                <div className={'data-container'}>
                     <h2>Import / Export Data</h2>
-                    <div className={'data-control-buttons'}>
-                        <button onClick={handleSave} className={"setting-btn"}>Export JSON</button>
-                        {/*<input*/}
-                        {/*    type="file"*/}
-                        {/*    accept=".json"*/}
-                        {/*    onChange={handleImport}*/}
-                        {/*    style={{display: 'none'}}*/}
-                        {/*    id="file-input"*/}
-                        {/*/>*/}
+                    {importedData && (
+                        <div className={'successful-import'}>
+                            <h3>Data imported!</h3>
+                        </div>
+                    )}
+                    {hasExported && (
+                        <div className={'successful-import'}>
+                            <h3>Data exported!</h3>
+                        </div>
+                    )}
+                    <div className={'data-controls'}>
+                    <button
+                            onClick={handleSave}
+                            className={"setting-btn"}>
+                            Export JSON
+                        </button>
                         <button
-                            onClick={handleImport}
+                            onClick={() => handleImport(setImportedData)}
                             className="setting-btn"
                         >
                             Load JSON
                         </button>
                     </div>
-                    {importedData && (
-                        <div>
-                            <h3>Data saved to /saves folder</h3>
-                        </div>
-                    )}
                 </div>
             </div>
         </div>

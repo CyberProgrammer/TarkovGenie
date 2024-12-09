@@ -9,6 +9,7 @@ const ContentHeader = () => {
     const dispatch = useDispatch();
 
     const currentPath = useSelector((root: RootState) => root.nav.currentPath);
+    console.log("Current Path: ", currentPath);
 
     return(
         <>

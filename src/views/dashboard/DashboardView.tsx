@@ -19,9 +19,6 @@ const DashboardView = () => {
             const apiHideoutData = await fetchHideoutData();
             const apiTaskData = await fetchTaskData();
             const apiItemData = await fetchItemData();
-            // console.log("Item data: ", apiItemData);
-            // console.log("Hideout data: ", apiHideoutData);
-            // console.log("Task data: ", apiTaskData);
 
             if(apiHideoutData.length == 0 || apiTaskData.length == 0 || apiItemData.length == 0){
                 console.log("Missing data...");
@@ -35,7 +32,7 @@ const DashboardView = () => {
             dispatch(updateStationData(apiHideoutData))
         }
 
-        fetchData();
+        fetchData().then(r => console.log(r));
     }, []);
 
     const alert  = {

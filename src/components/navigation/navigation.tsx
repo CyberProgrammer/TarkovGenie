@@ -19,6 +19,7 @@ import UserLevelWrapper from "@components/wrapper/userLevel.tsx";
 
 const Navigation = () => {
     const navState = useSelector((state: RootState)=> state.nav);
+    const profileName = useSelector((state: RootState) => state.user.username);
 
     const dispatch = useDispatch();
 
@@ -37,6 +38,7 @@ const Navigation = () => {
         { to: "/tasks", icon: TasksIcon, value: "Tasks" },
         { to: "/needed-items", icon: ItemsIcon, value: "Needed Items" },
         { to: "/hideout", icon: HideoutIcon, value: "Hideout" },
+        { to: "/profiles", icon: DashboardIcon, value: "Profiles"},
         { to: "/settings", icon: SettingsIcon, value: "Settings" },
     ], []);
 
@@ -74,12 +76,6 @@ const Navigation = () => {
         };
     }, [navigationVisibility]);
 
-    // useEffect(() => {
-    //     const currentPath = location.pathname;
-    //     const selectedLink = links.find(link => link.to === currentPath);
-    //     setSelected(selectedLink ? selectedLink.value : SelectedNav.Dashboard);
-    // }, [location.pathname, links]);
-
     return(
         <>
             <nav ref={navRef} className={`navigation ${!navigationVisibility ? 'nav-hidden' : ''}`}>
@@ -89,7 +85,7 @@ const Navigation = () => {
                         <h1 className={'navigation-header-title'}>Tarkov Genie</h1>
                     </div>
                     <div className="user-profile-wrapper">
-
+                        <h2 className={'profile-name'}>{profileName}</h2>
                     </div>
                     <UserLevelWrapper />
                     <div className="navigation-links">

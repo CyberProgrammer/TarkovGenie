@@ -5,12 +5,19 @@ import
     INCREASE_LEVEL,
     DECREASE_LEVEL,
     CHANGE_TRADER_FILTER,
-    CHANGE_FILTER_BY, CHANGE_STATUS_FILTER, LOAD_USER_DATA, CHANGE_PATH
+    CHANGE_FILTER_BY, CHANGE_STATUS_FILTER, LOAD_USER_DATA, CHANGE_PATH, MODIFY_USERNAME
 } from '../actionTypes/actionTypes';
 
 import {TaskStatusFilter, UserState} from "@customTypes/types.ts";
 
-// Action is used to send to the reducer
+const modifyUsername = (newUser: string) => {
+    console.log("User: ", newUser);
+    return{
+        type: MODIFY_USERNAME,
+        payload: newUser
+    }
+}
+
 
 const toggleNav = () => {
     return {
@@ -84,5 +91,6 @@ export
     changeTraderFilter,
     changeStatusFilter,
     toggleFilterBy,
-    loadUserData
+    loadUserData,
+    modifyUsername
 };

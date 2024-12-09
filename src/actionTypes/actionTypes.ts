@@ -2,7 +2,7 @@
 export const TOGGLE_NAV = "TOGGLE_NAV";
 export const CLOSE_NAV = "CLOSE_NAV";
 export const CHANGE_PATH = "CHANGE_PATH";
-
+export const MODIFY_USERNAME = "MODIFY_USERNAME";
 export const INCREASE_LEVEL = "INCREASE_LEVEL";
 export const DECREASE_LEVEL = "DECREASE_LEVEL";
 

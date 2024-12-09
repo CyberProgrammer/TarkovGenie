@@ -130,6 +130,12 @@
 	margin-left: 25px;
 }
 
+.navigation .profile-name{
+	text-align: center;
+	overflow-wrap: anywhere;
+	width: 100%;
+}
+
 /* User level wrapper */
 .user-level-wrapper{
 	display: flex;

@@ -1,9 +1,59 @@
-.data-controls{
-	display: flex;
-	flex-direction: column;
+
+.view-content{
+	padding: 1% 5% 2% 5% !important;
+}
+/* Change username */
+.username-container{
+	max-width: 350px;
+	margin-bottom: 3%;
 }
 
-.data-control-buttons{
+.username-control{
+	display: flex;
+	justify-content: space-between;
+	width: 100%;
+}
+
+.username-input{
+	width: 240px;
+	height: 40px;
+	border-radius: 5px;
+	border: none;
+	padding: 2%;
+}
+
+.username-input:disabled{
+	color: white;
+}
+
+.username-btn{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 100px;
+	margin-left: 10px;
+	height: 40px;
+	color: white;
+	border-radius: 5px;
+	background-color: rgba(68, 68, 68, 0.6);
+	border: none;
+
+}
+
+/* Import / Export */
+.data-container{
+	display: flex;
+	flex-direction: column;
+	max-width: 350px;
+}
+
+.data-controls{
 	display: flex;
 	margin: 15px 0;
+	width: 100%;
+	justify-content: space-between;
+}
+
+.successful-import{
+	margin: 1% 0 0 0;
 }

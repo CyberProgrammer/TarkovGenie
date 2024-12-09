@@ -5,6 +5,8 @@ import {
     UPDATE_LOCKED_TASKS
 } from "../actionTypes/actionTypes.ts";
 import {Task} from 'types/quest';
+import {HideoutUserData} from "@customTypes/hideout.ts";
+import {ItemsNeededState} from "@customTypes/items.ts";
 
 // Navigation state
 export interface NavState{
@@ -47,6 +49,14 @@ export interface UserTasksState{
 export interface HideoutState{
     hideoutItemsFoundCount: number;
     totalHideoutItemsCount: number;
+}
+
+// All import data
+export interface importData{
+    profileData: UserState,
+    hideoutData: HideoutUserData[],
+    taskData: UserTasksState,
+    itemsData: ItemsNeededState
 }
 
 export interface ReducerActionNumber{

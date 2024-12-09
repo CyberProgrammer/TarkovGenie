@@ -12,7 +12,7 @@ export interface LevelChangeAction {
 }
 
 export interface SetUsernameAction {
-    type: 'SET_USERNAME';
+    type: 'SET_USERNAME' | 'MODIFY_USERNAME';
     payload: string; // Strictly string
 }
 
